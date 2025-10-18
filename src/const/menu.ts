@@ -8,13 +8,13 @@ export const DATA_MANAGEMENT_MENU: MenuItem[] = [
       {
         id: "dashboard",
         label: "Dashboard",
-        icon: "grid",
+        icon: "mdi:home",
         to: "/admin/dashboard",
       },
       {
         id: "data-mgmt",
         label: "Data Management",
-        icon: "database",
+        icon: "lucide:align-horizontal-space-between",
         children: [
           {
             id: "import",
@@ -42,7 +42,7 @@ export const DATA_MANAGEMENT_MENU: MenuItem[] = [
       {
         id: "reports",
         label: "Reports",
-        icon: "chart",
+        icon: "lucide:newspaper",
         children: [
           { id: "analytics", label: "Analytics", to: "/reports/analytics" },
           { id: "sales", label: "Sales", to: "/reports/sales" },
@@ -57,7 +57,7 @@ export const DATA_MANAGEMENT_MENU: MenuItem[] = [
       {
         id: "config",
         label: "Configuration",
-        icon: "cog",
+        icon: "lucide:settings",
         children: [
           { id: "general", label: "General", to: "/settings/general" },
           { id: "security", label: "Security", to: "/settings/security" },

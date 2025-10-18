@@ -3,16 +3,6 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import {
-  ChevronDown,
-  ChevronRight,
-  LayoutGrid,
-  Database,
-  BarChart3,
-  Settings,
-  User,
-} from 'lucide-react'
-
 import { Button } from '@/components/ui/button'
 import {
   Popover,
@@ -22,21 +12,14 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { toArray } from '@/utils/helpers'
-
-const IconMap: Record<string, React.ElementType> = {
-  grid: LayoutGrid,
-  database: Database,
-  chart: BarChart3,
-  cog: Settings,
-  user: User,
-}
+import { Icon, type IconifyIcon } from '@iconify/react'
 
 export interface MenuItem {
   id: string
   label: string
-  icon?: string
   to?: string
   children?: MenuItem[]
+  icon?: string | IconifyIcon
 }
 
 interface AppSidebarProps {
@@ -57,8 +40,6 @@ function containsPath(item: MenuItem, path: string | null): boolean {
 
 // for Collapsed nav item
 function CollapsedNavItem({ item, currentPath }: { item: MenuItem; currentPath: string | null }) {
-  const Icon = item.icon ? IconMap[item.icon] : null
-
   if (item.children) {
     return (
       <Popover>
@@ -72,7 +53,7 @@ function CollapsedNavItem({ item, currentPath }: { item: MenuItem; currentPath: 
             )}
             aria-label={item.label}
           >
-            {Icon && <Icon className="h-5 w-5" />}
+            {item.icon && <Icon icon={item.icon} className="h-5 w-5" />}
           </Button>
         </PopoverTrigger>
         <PopoverContent side="right" className="p-2 w-56 space-y-1">
@@ -96,10 +77,10 @@ function CollapsedNavItem({ item, currentPath }: { item: MenuItem; currentPath: 
               size="icon"
               className={cn(
                 'w-10 h-10 rounded-lg hover:bg-primary/50',
-                currentPath && currentPath.startsWith(item.to!) && 'bg-primary/50'
+                currentPath && item.to && currentPath.startsWith(item.to) && 'bg-primary/50'
               )}
             >
-              {Icon && <Icon className="h-5 w-5" />}
+              {item.icon && <Icon icon={item.icon} className="h-5 w-5" />}
             </Button>
           </Link>
         </TooltipTrigger>
@@ -123,7 +104,8 @@ function NestedPopover({ item, currentPath }: { item: MenuItem; currentPath: str
             className="w-full justify-between px-3 py-2 text-sm font-normal hover:!bg-primary/50"
           >
             {item.label}
-            <ChevronRight className="h-4 w-4" />
+            <Icon icon="lucide:chevron-right" className="h-4 w-4" />
+
           </Button>
         </PopoverTrigger>
         <PopoverContent side="right" align="start" className="p-2 w-52 space-y-1">
@@ -139,10 +121,10 @@ function NestedPopover({ item, currentPath }: { item: MenuItem; currentPath: str
     <Link href={item.to || '#'} passHref aria-label={item.label}>
       <Button
         aria-label={item.label}
-        variant={currentPath && currentPath.startsWith(item.to!) ? 'default' : 'ghost'}
+        variant={currentPath && item.to && currentPath.startsWith(item.to) ? 'default' : 'ghost'}
         className={cn(
-          "w-full justify-start px-3 py-2 text-sm font-normal hover:!bg-primary/50 mb-2",
-          currentPath && currentPath.startsWith(item.to!) && '!bg-primary/50 hover:!bg-primary/50'
+          'w-full justify-start px-3 py-2 text-sm font-normal hover:!bg-primary/50 mb-2',
+          currentPath && item.to && currentPath.startsWith(item.to) && '!bg-primary/50 hover:!bg-primary/50'
         )}
       >
         {item.label}
@@ -153,9 +135,7 @@ function NestedPopover({ item, currentPath }: { item: MenuItem; currentPath: str
 
 // for sidebar item navigation
 function SidebarItem({ item, currentPath }: { item: MenuItem; currentPath: string | null }) {
-  const Icon = item.icon ? IconMap[item.icon] : null
   const hasChildren = !!item.children?.length
-
   const [open, setOpen] = useState<boolean>(() => containsPath(item, currentPath))
 
   useEffect(() => {
@@ -173,10 +153,10 @@ function SidebarItem({ item, currentPath }: { item: MenuItem; currentPath: strin
           aria-expanded={open}
         >
           <span className="flex items-center gap-2">
-            {Icon && <Icon className="h-5 w-5" />}
+            {item.icon && <Icon icon={item.icon} className="h-5 w-5" />}
             <span>{item.label}</span>
           </span>
-          <ChevronDown className={cn('h-4 w-4 transition-transform', open ? 'rotate-180' : '')} />
+          <Icon icon="lucide:chevron-down" className={cn('h-4 w-4 transition-transform', open ? 'rotate-180' : '')} />
         </button>
 
         {open && (
@@ -194,13 +174,13 @@ function SidebarItem({ item, currentPath }: { item: MenuItem; currentPath: strin
     <Link href={item.to || '#'} passHref aria-label={item.label}>
       <Button
         aria-label={item.label}
-        variant={currentPath && currentPath.startsWith(item.to!) ? 'default' : 'ghost'}
+        variant={currentPath && item.to && currentPath.startsWith(item.to) ? 'default' : 'ghost'}
         className={cn(
-          "w-full justify-start px-3 py-2 text-sm font-normal hover:!bg-primary/50 first:mt-2",
-          currentPath && currentPath.startsWith(item.to!) && '!bg-primary/50 hover:!bg-primary/50'
+          'w-full justify-start px-3 py-2 text-sm font-normal hover:!bg-primary/50 first:mt-2',
+          currentPath && item.to && currentPath.startsWith(item.to) && '!bg-primary/50 hover:!bg-primary/50'
         )}
       >
-        {Icon && <Icon className="h-5 w-5" />}
+        {item.icon && <Icon icon={item.icon} className="h-5 w-5" />}
         {item.label}
       </Button>
     </Link>
@@ -242,25 +222,21 @@ export function AppSidebar({
       <div className="flex-1 overflow-y-auto p-3">
         {collapsed ? (
           <div className="space-y-2">
-            {items.map((section) =>
-              section.children?.map((item) => (
+            {items.map(section =>
+              section.children?.map(item => (
                 <CollapsedNavItem key={item.id} item={item} currentPath={pathname} />
               ))
             )}
           </div>
         ) : (
           <div className="space-y-6">
-            {items.map((section) => (
+            {items.map(section => (
               <div key={section.id}>
                 <h3 className="text-xs font-semibold text-muted-foreground uppercase px-3">
                   {section.label}
                 </h3>
-                {section.children?.map((item) => (
-                  <SidebarItem
-                    key={item.id}
-                    item={item}
-                    currentPath={pathname}
-                  />
+                {section.children?.map(item => (
+                  <SidebarItem key={item.id} item={item} currentPath={pathname} />
                 ))}
               </div>
             ))}
