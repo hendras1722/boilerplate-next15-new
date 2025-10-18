@@ -1,6 +1,7 @@
-import React, { type ComponentType } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Queue } from './queue';
+// src/utils/useSingleton.tsx
+import React, { type ComponentType } from "react";
+import { createRoot, Root } from "react-dom/client";
+import { Queue } from "./queue";
 
 interface Instance {
   component: ComponentType<any>;
@@ -10,12 +11,14 @@ interface Instance {
 let instances: Map<string, Instance> | null = null;
 let container: HTMLElement | null = null;
 let root: Root | null = null;
+
 const queue = new Queue();
 
 function createGlobalContainer() {
-  const target = document.createElement('div');
-  target.id = 'global-singleton-container';
+  const target = document.createElement("div");
+  target.id = "global-singleton-container";
   document.body.appendChild(target);
+
   root = createRoot(target);
   instances = new Map();
   container = target;
@@ -24,9 +27,7 @@ function createGlobalContainer() {
 
 function renderInstances() {
   if (root && instances) {
-    root.render(
-      <GlobalContainer instances={Array.from(instances.values())} />
-    );
+    root.render(<GlobalContainer instances={Array.from(instances.values())} />);
   }
 }
 
@@ -56,7 +57,8 @@ async function createInstance(component: ComponentType<any>) {
     instances!.set(component.name, instance);
     renderInstances();
 
-    await new Promise(resolve => setTimeout(resolve, 0));
+    // Tunggu render React berikutnya selesai
+    await new Promise((resolve) => setTimeout(resolve, 0));
   }
 
   return instance.ref.current;
@@ -66,14 +68,26 @@ async function removeInstance(component: ComponentType<any>) {
   if (instances && container) {
     instances.delete(component.name);
     renderInstances();
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
   }
 }
 
-export async function useSingleton<T>(component: ComponentType<any>): Promise<T> {
-  return queue.add(() => createInstance(component));
+/**
+ * Mengambil instance global (singleton) dari sebuah komponen React.
+ * Semua operasi dijalankan berurutan untuk mencegah race condition.
+ */
+export async function useSingleton<T = any>(
+  component: ComponentType<any>
+): Promise<T> {
+  const result = await queue.add(() => createInstance(component));
+  return result as T;
 }
 
-export async function removeSingleton(component: ComponentType<any>): Promise<void> {
-  return queue.add(() => removeInstance(component));
-}
+/**
+ * Menghapus instance global dari daftar singleton.
+ */
+export async function removeSingleton(
+   component: ComponentType<any>
+ ): Promise<void> {
+   await queue.add(() => removeInstance(component));
+ }

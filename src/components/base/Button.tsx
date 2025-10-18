@@ -11,14 +11,17 @@ export default function BaseButton({
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }){
-  const { slots } = useSlots(children)
+    asChild?: boolean;
+  }) {
+  const { slots } = useSlots(children);
   return (
-    <Button {...props} className={cn(buttonVariants({ variant, size, className }))}>
-     {slots.trailing && <span className="mr-1">{slots.trailing}</span>}
+    <Button
+      {...props}
+      className={cn(buttonVariants({ variant, size, className }))}
+    >
+      {slots.leading && <span className="mr-1">{slots.leading}</span>}
       {children}
-      {slots.leading && <span className="ml-1">{slots.leading}</span>}
+      {slots.trailing && <span className="ml-1">{slots.trailing}</span>}
     </Button>
-  )
+  );
 }
