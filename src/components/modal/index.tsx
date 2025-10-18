@@ -1,5 +1,5 @@
 import React, { useState, ReactNode } from 'react';
-import { X } from 'lucide-react';
+import { Icon } from '@iconify/react';
 
 export interface ModalRef {
   open: (data: ModalData) => void;
@@ -71,7 +71,7 @@ const Modal = React.forwardRef<ModalRef, Record<string, any>>((_props, ref) => {
             onClick={() => setIsOpen(false)}
             className="text-gray-400 hover:text-gray-600 transition-colors"
           >
-            <X size={20} />
+            <Icon icon="lucide:x" className="h-4 w-4" />
           </button>
         </div>
 

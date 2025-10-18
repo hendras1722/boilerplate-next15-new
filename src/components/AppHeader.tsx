@@ -2,14 +2,7 @@
 
 import React from 'react'
 import { usePathname } from 'next/navigation'
-import {
-  Bell,
-  Menu as MenuIcon,
-  Settings,
-  User,
-  LogOut,
-  LifeBuoy,
-} from 'lucide-react'
+
 
 import { Button } from '@/components/ui/button'
 import {
@@ -23,6 +16,8 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { DarkModeToggle } from './DarkMode'
+import { Icon } from '@iconify/react'
+import { Each } from 'use-react-utilities'
 
 interface AppHeaderProps {
   onMenuClick: () => void
@@ -60,12 +55,12 @@ export function AppHeader({
           onClick={onMenuClick}
           className='hover:!bg-primary/50'
         >
-          <MenuIcon className="h-6 w-6" />
+          <Icon icon="lucide:menu" className="h-6 w-6" />
         </Button>
 
         <Breadcrumb>
           <BreadcrumbList>
-            {breadcrumbs.map((crumb, idx) => (
+            <Each of={breadcrumbs} render={(crumb, idx) => (
               <React.Fragment key={idx}>
                 <BreadcrumbItem>
                   {idx < breadcrumbs.length - 1 ? (
@@ -78,7 +73,7 @@ export function AppHeader({
                 </BreadcrumbItem>
                 {idx < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
               </React.Fragment>
-            ))}
+            )} />
           </BreadcrumbList>
         </Breadcrumb>
       </div>
@@ -91,7 +86,7 @@ export function AppHeader({
           onClick={onNotifications}
           className='hover:!bg-primary/50'
         >
-          <Bell className="h-5 w-5" />
+          <Icon icon="lucide:bell"  className="h-5 w-5"/>
         </Button>
 
         <DarkModeToggle />
@@ -113,17 +108,17 @@ export function AppHeader({
             <DropdownMenuLabel>{userName}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onProfile}>
-              <User className="h-4 w-4 mr-2" /> Profile
+              <Icon icon="lucide:user" className="h-4 w-4 mr-2" /> Profile
             </DropdownMenuItem>
             <DropdownMenuItem onClick={onSettings}>
-              <Settings className="h-4 w-4 mr-2" /> Settings
+              <Icon icon="lucide:settings" className="h-4 w-4 mr-2" /> Settings
             </DropdownMenuItem>
             <DropdownMenuItem onClick={onSupport}>
-              <LifeBuoy className="h-4 w-4 mr-2" /> Support
+              <Icon icon="lucide:life-buoy" className="h-4 w-4 mr-2" /> Support
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={onLogout}>
-              <LogOut className="h-4 w-4 mr-2" /> Log Out
+              <Icon icon="lucide:log-out" className="h-4 w-4 mr-2" /> Log Out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
