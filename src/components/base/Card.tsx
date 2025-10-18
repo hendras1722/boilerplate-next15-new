@@ -24,7 +24,7 @@ export default function BaseCard({
           <CardTitle>{title ?? slots.header}</CardTitle>
         </CardHeader>
       )}
-      <CardContent>{slots.default}</CardContent>
+      <CardContent>{slots.default || children}</CardContent>
       {slots.footer && <CardFooter>{slots.footer}</CardFooter>}
     </Card>
   );

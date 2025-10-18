@@ -64,7 +64,7 @@ export const DATA_MANAGEMENT_MENU: MenuItem[] = [
           { id: "users", label: "Users", to: "/settings/users" },
         ],
       },
-      { id: "profile", label: "Profile", icon: "user", to: "/profile" },
+      { id: "profile", label: "Profile", icon: "lucide:user", to: "/profile" },
     ],
   },
 ];
