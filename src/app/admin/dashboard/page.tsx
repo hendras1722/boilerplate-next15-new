@@ -3,14 +3,13 @@
 
 import {
   Calendar,
-  type CalendarModelValue,
   type DateRange,
 } from "@/components/ui/DatePickerRange";
 import { CalendarDate } from "@internationalized/date";
 import { definePage } from "@/lib/definePage";
 import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { MultiSelect, MultiSelectItem } from "@/components/ui/MultiSelect";
+import { MultiSelect, type MultiSelectItem } from "@/components/ui/MultiSelect";
 
 definePage({
   meta: {

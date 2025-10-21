@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Icon } from '@iconify/react'
 
-interface MultiSelectItem {
+export interface MultiSelectItem {
   value: string | number
   label: string
   disabled?: boolean
@@ -12,7 +12,7 @@ interface MultiSelectItem {
   onSelect?: (event: React.MouseEvent) => void
 }
 
-interface FetchQuery {
+export interface FetchQuery {
   page: number
   limit: number
   page_size: number
