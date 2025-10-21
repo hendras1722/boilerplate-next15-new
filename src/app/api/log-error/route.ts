@@ -1,19 +1,15 @@
-import { NextResponse } from "next/server";
 import { addLog } from "@/lib/logger";
 
 export async function POST(req: Request) {
-  try {
-    const body = await req.json();
+  const body = await req.json();
+  const { level, context, error } = body;
 
-    addLog(
-      body.level || "error",
-      typeof body.error === "string" ? body.error : JSON.stringify(body.error),
-      body.context
-    );
+  addLog(level, error.message, context, {
+    file: error.file,
+    line: error.line,
+    column: error.column,
+    stack: error.stack,
+  });
 
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error("Failed to log error:", err);
-    return NextResponse.json({ success: false }, { status: 500 });
-  }
+  return new Response("OK");
 }

@@ -1,3 +1,4 @@
+import { getCurrentPageMeta, getPageMetaByPath } from "@/lib/definePage";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
@@ -18,9 +19,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const meta = getCurrentPageMeta()
+  // console.log(meta,'inimeta')
   return (
     <html lang="en" suppressHydrationWarning>
       <body

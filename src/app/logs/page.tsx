@@ -14,12 +14,24 @@ export default function LogsPage() {
 
   useEffect(() => {
     fetchLogs()
-    const interval = setInterval(fetchLogs, 2000)
+    const interval = setInterval(fetchLogs, 10000)
     return () => clearInterval(interval)
   }, [])
 
   const filteredLogs =
     filter === 'all' ? logs : logs.filter((log) => log.level === filter)
+
+  // 🧩 formatter untuk path Next.js biar lebih enak dibaca
+  const formatNextPath = (path?: string) => {
+    if (!path) return ''
+    return path
+      .replace(/_next\/static\/chunks\//, '_next/static/chunks/src/') // tambahkan "src/"
+      .replace(/_/g, '/') // ubah semua underscore jadi slash
+      .replace(/\/tsx\//, '.tsx/') // betulkan ekstensi
+      .replace(/\/ts\//, '.ts/') // kalau .ts
+      .replace(/\/js\//, '.js/') // kalau .js
+      .replace(/\.{2,}/g, '.') // bersihin dobel titik
+  }
 
   return (
     <div className="p-4 font-mono text-sm space-y-2">
@@ -47,7 +59,7 @@ export default function LogsPage() {
         ))}
       </div>
 
-      <div className="space-y-1 max-h-[80vh] overflow-auto">
+      <div className="space-y-1 max-h-[80vh] overflow-auto border rounded p-2 bg-white shadow">
         {filteredLogs.map((log, i) => (
           <div
             key={i}
@@ -62,9 +74,15 @@ export default function LogsPage() {
             }`}
           >
             <div className="text-xs opacity-60">
-              [{log.timestamp}] {log.context}
+              [{new Date(log.timestamp).toLocaleString()}] {log.context ?? 'NoContext'}
             </div>
             <div>{log.message}</div>
+
+            {log.stack && (
+              <pre className="text-xs mt-1 bg-black/5 p-1 rounded overflow-x-auto whitespace-pre-wrap">
+                {formatNextPath(log.stack)}
+              </pre>
+            )}
           </div>
         ))}
       </div>

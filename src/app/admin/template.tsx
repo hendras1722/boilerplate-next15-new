@@ -3,6 +3,7 @@
 import { AppHeader } from '@/components/AppHeader'
 import { AppSidebar } from '@/components/AppSidebar'
 import { DATA_MANAGEMENT_MENU } from '@/const/menu'
+import { useRoute } from '@/hooks/useRoute'
 import React, { useState, useCallback } from 'react'
 
 interface DashboardLayoutProps {
@@ -11,6 +12,9 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+
+  const route = useRoute()
+  console.log(route, 'iniroute')
 
   // 2. HANDLER FUNCTIONS
   const handleToggleSidebar = useCallback(() => {

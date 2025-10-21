@@ -8,6 +8,10 @@ export interface LogItem {
   context?: string;
   message: string;
   timestamp: string;
+  file?: string;
+  line?: string;
+  column?: string;
+  stack?: string;
 }
 
 function ensureLogFile() {
@@ -16,29 +20,58 @@ function ensureLogFile() {
   }
 }
 
-export function addLog(level: LogItem["level"], message: string, context?: string) {
+export function addLog(
+  level: LogItem["level"],
+  message: string,
+  context?: string,
+  extra: Partial<LogItem> = {}
+) {
   ensureLogFile();
-  const raw = fs.readFileSync(logFilePath, "utf-8");
-  const logs: LogItem[] = raw ? JSON.parse(raw) : [];
 
-  const newLog: LogItem = {
-    level,
-    context,
-    message,
-    timestamp: new Date().toISOString(),
-  };
+  try {
+    const raw = fs.readFileSync(logFilePath, "utf-8");
+    const logs: LogItem[] = raw ? JSON.parse(raw) : [];
 
-  logs.push(newLog);
+    const newLog: LogItem = {
+      level,
+      context,
+      message,
+      timestamp: new Date().toISOString(),
+      ...extra,
+    };
 
-  // Simpan hanya 50 log terakhir
-  fs.writeFileSync(logFilePath, JSON.stringify(logs.slice(-50), null, 0));
+    logs.push(newLog);
+
+    // Simpan hanya 100 log terakhir
+    fs.writeFileSync(logFilePath, JSON.stringify(logs.slice(-100), null, 2));
+  } catch (error) {
+    console.error("Failed to write log:", error);
+  }
 }
 
-export const logError = (message: string, context?: string) => addLog("error", message, context);
-export const logWarn = (message: string, context?: string) => addLog("warn", message, context);
-export const logInfo = (message: string, context?: string) => addLog("info", message, context);
+export const logError = (
+  message: string,
+  context?: string,
+  extra?: Partial<LogItem>
+) => addLog("error", message, context, extra);
+
+export const logWarn = (
+  message: string,
+  context?: string,
+  extra?: Partial<LogItem>
+) => addLog("warn", message, context, extra);
+
+export const logInfo = (
+  message: string,
+  context?: string,
+  extra?: Partial<LogItem>
+) => addLog("info", message, context, extra);
 
 export function getLogs(): LogItem[] {
   ensureLogFile();
-  return JSON.parse(fs.readFileSync(logFilePath, "utf-8"));
+  try {
+    return JSON.parse(fs.readFileSync(logFilePath, "utf-8"));
+  } catch {
+    return [];
+  }
 }
