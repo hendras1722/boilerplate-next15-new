@@ -78,44 +78,7 @@ export default function TestLoggerPage() {
           </div>
 
           {/* Multiple Select with API */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Multiple Select - Users (API with Pagination)
-            </label>
-            <MultiSelect
-              placeholder="Select a post..."
-              url="https://jsonplaceholder.typicode.com/posts"
-              value={postValue}
-              onChange={setPostValue}
-              limit={10}
-              paginated
-              variant="outline"
-              size="md"
-              multiple
-              transformFetchData={(result: any) => {
-                const posts = Array.isArray(result)
-                  ? result
-                  : (result?.data ?? []);
-                return posts.map((post: any) => ({
-                  value: post.id,
-                  label: post.title,
-                  icon: "mdi:file-document-outline",
-                }));
-              }}
-              transformFetchQuery={(params) => ({
-                _page: params.page,
-                _limit: params.limit,
-                q: params.search,
-              })}
-            />
 
-            {postValue && !Array.isArray(postValue) && (
-              <p className="text-sm text-gray-600 mt-1">
-                Selected:{" "}
-                <span className="font-medium">{JSON.stringify(postValue)}</span>
-              </p>
-            )}
-          </div>
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
@@ -141,6 +104,7 @@ export default function TestLoggerPage() {
           </div>
 
           <div className="space-y-4">
+
             <h2 className="text-xl font-semibold text-gray-900">Variants</h2>
             <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2">
@@ -187,6 +151,45 @@ export default function TestLoggerPage() {
                 label: `Item ${i + 1}`,
               }))}
             />
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Multiple Select - Users (API with Pagination)
+            </label>
+            <MultiSelect
+              placeholder="Select a post..."
+              url="https://jsonplaceholder.typicode.com/posts"
+              value={postValue}
+              onChange={setPostValue}
+              limit={10}
+              paginated
+              variant="outline"
+              size="md"
+              multiple
+              transformFetchData={(result: any) => {
+                const posts = Array.isArray(result)
+                  ? result
+                  : (result?.data ?? []);
+                return posts.map((post: any) => ({
+                  value: post.id,
+                  label: post.title,
+                  icon: "mdi:file-document-outline",
+                }));
+              }}
+              transformFetchQuery={(params) => ({
+                _page: params.page,
+                _limit: params.limit,
+                q: params.search,
+              })}
+            />
+
+            {postValue && !Array.isArray(postValue) && (
+              <p className="text-sm text-gray-600 mt-1">
+                Selected:{" "}
+                <span className="font-medium">{JSON.stringify(postValue)}</span>
+              </p>
+            )}
           </div>
         </div>
       </div>
