@@ -123,7 +123,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       const rect = containerRef.current.getBoundingClientRect()
       const spaceBelow = window.innerHeight - rect.bottom
       const spaceAbove = rect.top
-      const dropdownHeight = 320 // max-h-80 = 320px
+      const dropdownHeight = 320
 
       if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
         setDropdownPosition('top')
@@ -132,6 +132,34 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       }
     }
   }, [open])
+
+  useEffect(() => {
+      if (open && containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect()
+        const spaceBelow = window.innerHeight - rect.bottom
+        const spaceAbove = rect.top
+        const dropdownHeight = 320
+
+        if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
+          setDropdownPosition('top')
+        } else {
+          setDropdownPosition('bottom')
+        }
+      }
+    }, [open])
+
+    // Block body scroll when dropdown is open
+    useEffect(() => {
+      if (open) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = ''
+      }
+
+      return () => {
+        document.body.style.overflow = ''
+      }
+    }, [open])
 
   // Fetch data function
   const fetchData = useCallback(
