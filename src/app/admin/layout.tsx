@@ -1,4 +1,3 @@
-import { getCurrentPageMeta, getPageMetaByPath } from "@/lib/definePage";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 

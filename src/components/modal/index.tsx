@@ -15,7 +15,7 @@ export interface ModalData {
 
 const Modal = React.forwardRef<ModalRef, Record<string, any>>((_props, ref) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [data, setData] = useState<ModalData>({
+  const [data, setData]     = useState<ModalData>({
     title: 'Modal',
     content: 'Content',
     type: 'info',

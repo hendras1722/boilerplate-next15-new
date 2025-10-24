@@ -14,7 +14,7 @@ function getGlobalRegistry(): Map<string, DefinePageOptions> {
 
 function getCallerPath(): string {
   try {
-    const err = new Error()
+    const err   = new Error()
     const stack = err.stack || ''
     const match = stack.match(/app[\\/](.+?)\.(page|layout|template)\.tsx/)
     return match ? match[1] : `unknown_${Date.now()}`
@@ -24,7 +24,7 @@ function getCallerPath(): string {
 }
 
 export function definePage(options: DefinePageOptions) {
-  const path = getCallerPath()
+  const path     = getCallerPath()
   const registry = getGlobalRegistry()
   registry.set(path, options)
 
@@ -67,7 +67,7 @@ export function getPageMetaByPath(path: string) {
  */
 export function getCurrentPageMeta() {
   const registry = getGlobalRegistry()
-  const entries = Array.from(registry.entries())
+  const entries  = Array.from(registry.entries())
   if (!entries.length) return null
   const [path, meta] = entries[entries.length - 1]
   return { path, ...meta }

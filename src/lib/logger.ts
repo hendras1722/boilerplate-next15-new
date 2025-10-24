@@ -29,7 +29,7 @@ export function addLog(
   ensureLogFile();
 
   try {
-    const raw = fs.readFileSync(logFilePath, "utf-8");
+    const raw             = fs.readFileSync(logFilePath, "utf-8");
     const logs: LogItem[] = raw ? JSON.parse(raw) : [];
 
     const newLog: LogItem = {

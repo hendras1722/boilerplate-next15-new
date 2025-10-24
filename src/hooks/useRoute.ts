@@ -7,20 +7,20 @@ import { ref } from 'use-react-utilities'
 import { useComputed } from 'use-react-utilities'
 
 export const useRoute = () => {
-  const pathname = usePathname()
-  const params = useParams()
-  const query = ref<Record<string, string>>({})
-  const origin = ref('')
+  const pathname  = usePathname()
+  const params    = useParams()
+  const query     = ref<Record<string, string>>({})
+  const origin    = ref('')
   const routeData = useRouteStore()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search)
+      const urlParams                      = new URLSearchParams(window.location.search)
       const result: Record<string, string> = {}
       urlParams.forEach((value, key) => {
         result[key] = value
       })
-      query.value = result
+      query.value  = result
       origin.value = window.location.origin
     }
   }, [pathname, params])

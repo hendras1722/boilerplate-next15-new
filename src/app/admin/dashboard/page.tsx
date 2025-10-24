@@ -1,10 +1,6 @@
-// app/test-logger/page.tsx
 "use client";
 
-import {
-  Calendar,
-  type DateRange,
-} from "@/components/ui/DatePickerRange";
+import { Calendar, type DateRange } from "@/components/ui/DatePickerRange";
 import { CalendarDate } from "@internationalized/date";
 import { definePage } from "@/lib/definePage";
 import React, { useState } from "react";
@@ -19,18 +15,16 @@ definePage({
 });
 
 export default function TestLoggerPage() {
-  const [rangeDate, setRangeDate] = useState<DateRange | null>({
+  const [rangeDate, setRangeDate]     = useState<DateRange | null>({
     start: new CalendarDate(2025, 10, 21),
     end: new CalendarDate(2025, 10, 21),
   });
-
   const [singleValue, setSingleValue] = useState<
     MultiSelectItem | MultiSelectItem[] | undefined
   >();
-  const [postValue, setPostValue] = useState<
+  const [postValue, setPostValue]     = useState<
     MultiSelectItem | MultiSelectItem[] | undefined
   >({ value: 91, label: "aut amet sed" });
-
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold">🧩 Logger Test Page</h1>
@@ -79,7 +73,6 @@ export default function TestLoggerPage() {
 
           {/* Multiple Select with API */}
 
-
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
               Static Items (No API)
@@ -104,7 +97,6 @@ export default function TestLoggerPage() {
           </div>
 
           <div className="space-y-4">
-
             <h2 className="text-xl font-semibold text-gray-900">Variants</h2>
             <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2">

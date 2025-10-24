@@ -1,21 +1,13 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+// eslint.config.js
+import tseslint from "typescript-eslint";
+import importPlugin from "eslint-plugin-import";
+import nPlugin from "eslint-plugin-n";
+import promisePlugin from "eslint-plugin-promise";
+import unicornPlugin from "eslint-plugin-unicorn";
+import alignAssignments from "eslint-plugin-align-assignments";
+import globals from "globals";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  {
-    rules: {
-      'react-hooks/exhaustive-deps': 'off',
-       "@typescript-eslint/no-explicit-any": ["off"]
-    },
-  },
+export default tseslint.config(
   {
     ignores: [
       "node_modules/**",
@@ -23,8 +15,35 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      ".husky/**",
     ],
   },
-];
-
-export default eslintConfig;
+  {
+    files: ["**/*.{ts,tsx}"],
+    plugins: {
+      import: importPlugin,
+      n: nPlugin,
+      promise: promisePlugin,
+      unicorn: unicornPlugin,
+      "align-assignments": alignAssignments,
+    },
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        project: "./tsconfig.json",
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/key-spacing": "off",
+      "align-assignments/align-assignments": "error",
+      "block-spacing": ["error", "always"],
+      "react-hooks/exhaustive-deps": "off",
+      "no-undef": "off",
+    },
+  }
+);

@@ -181,7 +181,7 @@ function getMonthName(date: DateValue, locale: string = 'en-US'): string {
 
 function getWeekDayNames(locale: string = 'en-US'): string[] {
   const days: string[] = [];
-  const baseDate = new Date(2024, 0, 7); // A Sunday
+  const baseDate       = new Date(2024, 0, 7); // A Sunday
 
   for (let i = 0; i < 7; i++) {
     const date = new Date(baseDate);
@@ -200,9 +200,9 @@ function isSameDay(a: DateValue | null | undefined, b: DateValue | null | undefi
 function isInRange(date: DateValue, range: DateRange | null | undefined): boolean {
   if (!range || !range.start || !range.end) return false;
 
-  const dateNum = date.year * 10000 + date.month * 100 + date.day;
+  const dateNum  = date.year * 10000 + date.month * 100 + date.day;
   const startNum = range.start.year * 10000 + range.start.month * 100 + range.start.day;
-  const endNum = range.end.year * 10000 + range.end.month * 100 + range.end.day;
+  const endNum   = range.end.year * 10000 + range.end.month * 100 + range.end.day;
 
   return dateNum >= startNum && dateNum <= endNum;
 }
@@ -225,8 +225,8 @@ function SingleMonthCalendar({
 }: SingleMonthCalendarProps) {
   const monthGrid = useMemo(() => {
     const weeks: DateValue[][] = [];
-    const weeksInMonth = getWeeksInMonth(currentMonth, locale);
-    const firstDayOfMonth = currentMonth.set({ day: 1 });
+    const weeksInMonth         = getWeeksInMonth(currentMonth, locale);
+    const firstDayOfMonth      = currentMonth.set({ day: 1 });
 
     let currentDate = startOfWeek(firstDayOfMonth, locale);
 
@@ -245,7 +245,7 @@ function SingleMonthCalendar({
   }, [currentMonth, locale, fixedWeeks]);
 
   const colors = colorVariants[color];
-  const sizes = sizeConfig[size];
+  const sizes  = sizeConfig[size];
 
   return (
     <div>
@@ -267,9 +267,9 @@ function SingleMonthCalendar({
             {week.map((date: DateValue, dateIndex: number) => {
               const isOutsideMonth = date.month !== currentMonth.month;
               const isSelectedDate = isSelected(date);
-              const isInRangeDate = isInSelectedRange(date);
+              const isInRangeDate  = isInSelectedRange(date);
               const isDisabledDate = isDisabled(date);
-              const isToday = isSameDay(date, new CalendarDate(
+              const isToday        = isSameDay(date, new CalendarDate(
                 new Date().getFullYear(),
                 new Date().getMonth() + 1,
                 new Date().getDate()
@@ -396,8 +396,8 @@ export const Calendar = forwardRef(function Calendar<R extends boolean = false, 
       }
     } else if (multiple) {
       const multiValue = (selectedDate || []) as DateValue[];
-      const exists = multiValue.some(d => isSameDay(d, date));
-      newValue = (exists
+      const exists     = multiValue.some(d => isSameDay(d, date));
+      newValue         = (exists
         ? multiValue.filter(d => !isSameDay(d, date))
         : [...multiValue, date]) as CalendarModelValue<R, M>;
     } else {
@@ -462,14 +462,14 @@ export const Calendar = forwardRef(function Calendar<R extends boolean = false, 
   // Generate title for all months
   const generateTitle = () => {
     const firstMonth = months[0];
-    const lastMonth = months[months.length - 1];
+    const lastMonth  = months[months.length - 1];
 
     if (numberOfMonths === 1) {
       return getMonthName(firstMonth, locale);
     }
 
     const firstMonthName = new Date(firstMonth.year, firstMonth.month - 1).toLocaleDateString(locale, { month: 'long' });
-    const lastMonthName = new Date(lastMonth.year, lastMonth.month - 1).toLocaleDateString(locale, { month: 'long' });
+    const lastMonthName  = new Date(lastMonth.year, lastMonth.month - 1).toLocaleDateString(locale, { month: 'long' });
 
     // Check if same year
     if (firstMonth.year === lastMonth.year) {
@@ -480,7 +480,7 @@ export const Calendar = forwardRef(function Calendar<R extends boolean = false, 
   };
 
   const titleText = generateTitle();
-  const sizes = sizeConfig[size];
+  const sizes     = sizeConfig[size];
 
   return (
     <div className={`inline-block ${sizes.padding} ${className} `}>

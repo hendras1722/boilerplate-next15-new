@@ -3,11 +3,11 @@
 import { useEffect, useState } from 'react'
 
 export default function LogsPage() {
-  const [logs, setLogs] = useState<any[]>([])
+  const [logs, setLogs]     = useState<any[]>([])
   const [filter, setFilter] = useState<'all' | 'info' | 'warn' | 'error'>('all')
 
   const fetchLogs = async () => {
-    const res = await fetch('/api/logs')
+    const res  = await fetch('/api/logs')
     const data = await res.json()
     setLogs(data)
   }

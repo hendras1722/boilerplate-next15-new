@@ -5,7 +5,7 @@ import { useSyncExternalStore } from 'react'
 type RouteData = Record<string, any>
 
 let currentRoute: RouteData = {}
-const listeners = new Set<() => void>()
+const listeners             = new Set<() => void>()
 
 function setRoute(data: RouteData) {
   currentRoute = { ...currentRoute, ...data }

@@ -25,8 +25,8 @@ export function PaginationNuxt({
     }
 
     const pages: (number | '...')[] = []
-    const left = Math.max(2, page - siblingCount)
-    const right = Math.min(total - 1, page + siblingCount)
+    const left                      = Math.max(2, page - siblingCount)
+    const right                     = Math.min(total - 1, page + siblingCount)
 
     pages.push(1)
 
