@@ -35,8 +35,8 @@ export function useHttp<TResponse, TBody = unknown>(
 
   const queryClient = useQueryClient()
 
-  const [data, setData] = useState<TResponse | null>(null)
-  const [error, setError] = useState<Error | null>(null)
+  const [data, setData]       = useState<TResponse | null>(null)
+  const [error, setError]     = useState<Error | null>(null)
   const [loading, setLoading] = useState(false)
 
   const {

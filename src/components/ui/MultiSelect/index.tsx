@@ -80,18 +80,18 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   className = "",
   searchInput = true,
 }) => {
-  const [selected, setSelected] = useState<MultiSelectItem | MultiSelectItem[] | undefined>(value || defaultValue)
-  const [data, setData] = useState<MultiSelectItem[]>([])
-  const [search, setSearch] = useState("")
-  const [open, setOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(loading)
-  const [page, setPage] = useState(1)
-  const [hasMore, setHasMore] = useState(true)
+  const [selected, setSelected]                 = useState<MultiSelectItem | MultiSelectItem[] | undefined>(value || defaultValue)
+  const [data, setData]                         = useState<MultiSelectItem[]>([])
+  const [search, setSearch]                     = useState("")
+  const [open, setOpen]                         = useState(false)
+  const [isLoading, setIsLoading]               = useState(loading)
+  const [page, setPage]                         = useState(1)
+  const [hasMore, setHasMore]                   = useState(true)
   const [dropdownPosition, setDropdownPosition] = useState<"bottom" | "top">("bottom")
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const dropdownRef = useRef<HTMLDivElement>(null)
-  const isFetchingRef = useRef(false)
+  const debounceTimeout                         = useRef<NodeJS.Timeout | null>(null)
+  const containerRef                            = useRef<HTMLDivElement>(null)
+  const dropdownRef                             = useRef<HTMLDivElement>(null)
+  const isFetchingRef                           = useRef(false)
 
   const _items = useMemo(() => (Array.isArray(items) && items.length > 0 ? items : data), [items, data])
 
@@ -141,9 +141,9 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   useEffect(() => {
     const checkAndUpdatePosition = () => {
       if (open && containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect()
-        const spaceBelow = window.innerHeight - rect.bottom
-        const spaceAbove = rect.top
+        const rect           = containerRef.current.getBoundingClientRect()
+        const spaceBelow     = window.innerHeight - rect.bottom
+        const spaceAbove     = rect.top
         const dropdownHeight = 320
 
         const shouldBeTop = spaceBelow < dropdownHeight && spaceAbove > spaceBelow
@@ -280,8 +280,8 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
 
     if (multiple) {
       const current = Array.isArray(selected) ? selected : []
-      const exists = current.some((v) => v.value === item.value)
-      newValue = exists ? current.filter((v) => v.value !== item.value) : [...current, item]
+      const exists  = current.some((v) => v.value === item.value)
+      newValue      = exists ? current.filter((v) => v.value !== item.value) : [...current, item]
     } else {
       newValue = item
       setOpen(false)

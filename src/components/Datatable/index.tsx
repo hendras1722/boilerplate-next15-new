@@ -56,7 +56,7 @@ export default function ShadcnDataTable<TData>({
   })
 
   const currentPage = table.getState().pagination.pageIndex + 1
-  const totalPages = table.getPageCount()
+  const totalPages  = table.getPageCount()
 
   return (
     <div className="w-full space-y-4">

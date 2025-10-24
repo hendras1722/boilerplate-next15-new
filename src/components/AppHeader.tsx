@@ -42,7 +42,7 @@ export function AppHeader({
   onSupport,
   onLogout,
 }: AppHeaderProps) {
-  const pathname = usePathname()
+  const pathname    = usePathname()
   const breadcrumbs = pathname.split('/').filter(Boolean)
 
   return (

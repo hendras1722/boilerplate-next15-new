@@ -10,7 +10,7 @@ export const useQueryEvents = <TData = unknown, TError = unknown>(
   callbacks: Callbacks<TData, TError>,
 ) => {
   const { isSuccess, isError, data, error } = query;
-  const { onSuccess, onError } = callbacks;
+  const { onSuccess, onError }              = callbacks;
 
   if (isSuccess && data) {
     onSuccess?.(data);

@@ -17,7 +17,7 @@ export default function GlobalErrorLogger() {
     }
 
     window.onunhandledrejection = function (event) {
-      const err = event.reason
+      const err    = event.reason
       const parsed = parseStack(err?.stack || '')
       sendLog('error', 'unhandledrejection', {
         message: String(err?.message || err),
@@ -26,7 +26,7 @@ export default function GlobalErrorLogger() {
     }
 
     const originalConsoleError = console.error
-    console.error = (...args) => {
+    console.error              = (...args) => {
       originalConsoleError(...args)
       sendLog('error', 'console.error', { message: args.map(String).join(' ') })
     }

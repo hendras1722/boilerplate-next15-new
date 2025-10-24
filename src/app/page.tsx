@@ -53,7 +53,6 @@ import React from 'react';
 
 export default function Modal() {
   const handleOpenModal = async () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const modal = await useModalSingleton();
     modal.open({
       title: 'Berhasil',
@@ -66,7 +65,6 @@ export default function Modal() {
   };
 
   const handleOpenModal2 = async () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const modal = await useModalSingleton();
     modal.open({
       title: 'Error',
@@ -76,7 +74,6 @@ export default function Modal() {
   };
 
   const handleOpenModal3 = async () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const modal = await useModalSingleton();
     modal.open({
       title: 'Peringatan',
@@ -86,7 +83,6 @@ export default function Modal() {
   };
 
   const handleOpenModal4 = async () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const modal = await useModalSingleton();
     modal.open({
       title: 'Informasi',
@@ -132,7 +128,7 @@ export default function Modal() {
         <div className="mt-8 bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Cara Pakai:</h2>
           <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto">
-{`// utils/useModalSingleton.ts
+            {`// utils/useModalSingleton.ts
 import { useModalSingleton } from '@/hooks/useModal';
 
 // Di component

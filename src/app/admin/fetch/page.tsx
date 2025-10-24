@@ -11,14 +11,14 @@ import {
 
 export default function HttpDemoPage() {
   const [postId, setPostId] = useState("1");
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-
+  const [title, setTitle]   = useState("");
+  const [body, setBody]     = useState("");
+  
   // Hooks
-  const getPost = useGetPosts();
+  const getPost    = useGetPosts();
   const createPost = useCreatePost();
   const updatePost = useUpdatePost(postId);
-  const patchPost = usePatchPost(postId);
+  const patchPost  = usePatchPost(postId);
   const deletePost = useDeletePost(postId);
 
   // Handlers

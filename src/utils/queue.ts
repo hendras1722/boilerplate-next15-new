@@ -29,7 +29,7 @@ export class Queue {
   run() {
     if (this.queue.length > 0 && !this.running) {
       this.running = true;
-      const job = this.dequeue();
+      const job    = this.dequeue();
       if(!job) return;
       job
         .run()

@@ -3,11 +3,11 @@ import { type NextRequest, NextResponse } from "next/server"
 const API_BASE_URL = "https://jsonplaceholder.typicode.com/"
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
-  const { path } = await params
+  const { path }   = await params
   const pathString = path.join("/")
 
   const searchParams = request.nextUrl.searchParams
-  const queryString = searchParams.toString()
+  const queryString  = searchParams.toString()
 
   const url = new URL(`${API_BASE_URL}/${pathString}`)
   if (queryString) {
@@ -57,10 +57,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 }
 
 async function handleRequest(request: NextRequest, params: Promise<{ path: string[] }>, method: string) {
-  const { path } = await params
-  const pathString = path.join("/")
+  const { path }     = await params
+  const pathString   = path.join("/")
   const searchParams = request.nextUrl.searchParams
-  const queryString = searchParams.toString()
+  const queryString  = searchParams.toString()
 
   const url = new URL(`${API_BASE_URL}/${pathString}`)
   if (queryString) {

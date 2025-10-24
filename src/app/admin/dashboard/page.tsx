@@ -15,15 +15,14 @@ definePage({
 });
 
 export default function TestLoggerPage() {
-  const [rangeDate, setRangeDate] = useState<DateRange | null>({
+  const [rangeDate, setRangeDate]     = useState<DateRange | null>({
     start: new CalendarDate(2025, 10, 21),
     end: new CalendarDate(2025, 10, 21),
   });
-
   const [singleValue, setSingleValue] = useState<
     MultiSelectItem | MultiSelectItem[] | undefined
   >();
-  const [postValue, setPostValue] = useState<
+  const [postValue, setPostValue]     = useState<
     MultiSelectItem | MultiSelectItem[] | undefined
   >({ value: 91, label: "aut amet sed" });
   return (

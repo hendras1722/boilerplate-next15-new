@@ -8,17 +8,17 @@ interface Instance {
 }
 
 let instances: Map<string, Instance> | null = null;
-let container: HTMLElement | null = null;
-let root: Root | null = null;
+let container: HTMLElement | null           = null;
+let root: Root | null                       = null;
 
 const queue = new Queue();
 
 function createGlobalContainer() {
   const target = document.createElement("div");
-  target.id = "global-singleton-container";
+  target.id    = "global-singleton-container";
   document.body.appendChild(target);
 
-  root = createRoot(target);
+  root      = createRoot(target);
   instances = new Map();
   container = target;
   renderInstances();
@@ -52,7 +52,7 @@ async function createInstance(component: ComponentType<any>) {
 
   if (!instance) {
     const ref = React.createRef<any>();
-    instance = { component, ref };
+    instance  = { component, ref };
     instances!.set(component.name, instance);
     renderInstances();
 

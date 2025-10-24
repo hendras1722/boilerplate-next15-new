@@ -135,7 +135,7 @@ function NestedPopover({ item, currentPath }: { item: MenuItem; currentPath: str
 
 // for sidebar item navigation
 function SidebarItem({ item, currentPath }: { item: MenuItem; currentPath: string | null }) {
-  const hasChildren = !!item.children?.length
+  const hasChildren     = !!item.children?.length
   const [open, setOpen] = useState<boolean>(() => containsPath(item, currentPath))
 
   useEffect(() => {

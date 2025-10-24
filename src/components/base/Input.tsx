@@ -11,13 +11,13 @@ export default function BaseInput({
   children,
   ...props
 }: React.ComponentProps<"input">) {
-  const { slots } = useSlots(children);
-  const leadingRef = useRef<HTMLDivElement>(null);
-  const trailingRef = useRef<HTMLDivElement>(null);
+  const { slots }             = useSlots(children);
+  const leadingRef            = useRef<HTMLDivElement>(null);
+  const trailingRef           = useRef<HTMLDivElement>(null);
   const [padding, setPadding] = useState({ left: 12, right: 12 }); // default px-3
 
   useLayoutEffect(() => {
-    const left = leadingRef.current?.offsetWidth ?? 0;
+    const left  = leadingRef.current?.offsetWidth ?? 0;
     const right = trailingRef.current?.offsetWidth ?? 0;
     // tambahkan jarak kecil biar gak mepet
     setPadding({

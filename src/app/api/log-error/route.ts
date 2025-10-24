@@ -1,7 +1,7 @@
 import { addLog } from "@/lib/logger";
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  const body                      = await req.json();
   const { level, context, error } = body;
 
   addLog(level, error.message, context, {
