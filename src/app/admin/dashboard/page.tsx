@@ -30,7 +30,6 @@ export default function TestLoggerPage() {
   const [postValue, setPostValue] = useState<
     MultiSelectItem | MultiSelectItem[] | undefined
   >({ value: 91, label: "aut amet sed" });
-
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold">🧩 Logger Test Page</h1>
