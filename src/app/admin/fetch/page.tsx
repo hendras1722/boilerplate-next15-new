@@ -1,88 +1,93 @@
-"use client"
+"use client";
 
-import { useState } from "react"
+import { useState } from "react";
 import {
   useGetPosts,
   useCreatePost,
   useUpdatePost,
   usePatchPost,
   useDeletePost,
-  type Post,
-} from "@/actions/posts"
+} from "@/actions/posts";
 
 export default function HttpDemoPage() {
-  const [postId, setPostId] = useState("1")
-  const [title, setTitle] = useState("")
-  const [body, setBody] = useState("")
+  const [postId, setPostId] = useState("1");
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
 
   // Hooks
-  const getPost = useGetPosts()
-  const createPost = useCreatePost()
-  const updatePost = useUpdatePost(postId)
-  const patchPost = usePatchPost(postId)
-  const deletePost = useDeletePost(postId)
+  const getPost = useGetPosts();
+  const createPost = useCreatePost();
+  const updatePost = useUpdatePost(postId);
+  const patchPost = usePatchPost(postId);
+  const deletePost = useDeletePost(postId);
 
   // Handlers
   const handleGetPost = async () => {
     try {
-      await getPost.execute()
+      await getPost.execute();
     } catch (error) {
-      console.error("Get failed:", error)
+      console.error("Get failed:", error);
     }
-  }
+  };
 
   const handleCreatePost = async () => {
-    if (!title || !body) return
+    if (!title || !body) return;
     try {
-      await createPost.execute({ title, body, userId: 1 })
-      setTitle("")
-      setBody("")
+      await createPost.execute({ title, body, userId: 1 });
+      setTitle("");
+      setBody("");
     } catch (error) {
-      console.error("Create failed:", error)
+      console.error("Create failed:", error);
     }
-  }
+  };
 
   const handleUpdatePost = async () => {
-    if (!title || !body) return
+    if (!title || !body) return;
     try {
-      await updatePost.execute({ title, body, userId: 1 })
+      await updatePost.execute({ title, body, userId: 1 });
     } catch (error) {
-      console.error("Update failed:", error)
+      console.error("Update failed:", error);
     }
-  }
+  };
 
   const handlePatchPost = async () => {
-    if (!title && !body) return
+    if (!title && !body) return;
     try {
       await patchPost.execute({
         ...(title && { title }),
         ...(body && { body }),
-      })
+      });
     } catch (error) {
-      console.error("Patch failed:", error)
+      console.error("Patch failed:", error);
     }
-  }
+  };
 
   const handleDeletePost = async () => {
     try {
-      await deletePost.execute()
-      getPost.reset()
+      await deletePost.execute();
+      getPost.reset();
     } catch (error) {
-      console.error("Delete failed:", error)
+      console.error("Delete failed:", error);
     }
-  }
+  };
 
   // ==================== UI ====================
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold text-slate-800 mb-2">useHttp Demo (Refactored)</h1>
-        <p className="text-slate-600 mb-8">All HTTP methods via reusable actions</p>
+        <h1 className="text-4xl font-bold text-slate-800 mb-2">
+          useHttp Demo (Refactored)
+        </h1>
+        <p className="text-slate-600 mb-8">
+          All HTTP methods via reusable actions
+        </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* ==================== GET SECTION ==================== */}
           <div className="bg-white rounded-lg shadow-md p-6 border-t-4 border-blue-500">
-            <h2 className="text-2xl font-bold text-blue-600 mb-4">GET - Fetch Post</h2>
+            <h2 className="text-2xl font-bold text-blue-600 mb-4">
+              GET - Fetch Post
+            </h2>
 
             <input
               type="number"
@@ -102,16 +107,24 @@ export default function HttpDemoPage() {
 
             {getPost.data && (
               <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                <p><strong>ID:</strong> {getPost.data.id}</p>
-                <p><strong>Title:</strong> {getPost.data.title}</p>
-                <p><strong>Body:</strong> {getPost.data.body}</p>
+                <p>
+                  <strong>ID:</strong> {getPost.data.id}
+                </p>
+                <p>
+                  <strong>Title:</strong> {getPost.data.title}
+                </p>
+                <p>
+                  <strong>Body:</strong> {getPost.data.body}
+                </p>
               </div>
             )}
           </div>
 
           {/* ==================== POST SECTION ==================== */}
           <div className="bg-white rounded-lg shadow-md p-6 border-t-4 border-green-500">
-            <h2 className="text-2xl font-bold text-green-600 mb-4">POST - Create Post</h2>
+            <h2 className="text-2xl font-bold text-green-600 mb-4">
+              POST - Create Post
+            </h2>
 
             <input
               type="text"
@@ -140,7 +153,9 @@ export default function HttpDemoPage() {
 
           {/* ==================== PUT SECTION ==================== */}
           <div className="bg-white rounded-lg shadow-md p-6 border-t-4 border-orange-500">
-            <h2 className="text-2xl font-bold text-orange-600 mb-4">PUT - Update Post</h2>
+            <h2 className="text-2xl font-bold text-orange-600 mb-4">
+              PUT - Update Post
+            </h2>
 
             <button
               onClick={handleUpdatePost}
@@ -153,7 +168,9 @@ export default function HttpDemoPage() {
 
           {/* ==================== PATCH SECTION ==================== */}
           <div className="bg-white rounded-lg shadow-md p-6 border-t-4 border-purple-500">
-            <h2 className="text-2xl font-bold text-purple-600 mb-4">PATCH - Partial Update</h2>
+            <h2 className="text-2xl font-bold text-purple-600 mb-4">
+              PATCH - Partial Update
+            </h2>
 
             <button
               onClick={handlePatchPost}
@@ -166,7 +183,9 @@ export default function HttpDemoPage() {
 
           {/* ==================== DELETE SECTION ==================== */}
           <div className="bg-white rounded-lg shadow-md p-6 border-t-4 border-red-500 lg:col-span-2">
-            <h2 className="text-2xl font-bold text-red-600 mb-4">DELETE - Remove Post</h2>
+            <h2 className="text-2xl font-bold text-red-600 mb-4">
+              DELETE - Remove Post
+            </h2>
 
             <button
               onClick={handleDeletePost}
@@ -179,5 +198,5 @@ export default function HttpDemoPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

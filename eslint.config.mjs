@@ -12,8 +12,10 @@ const compat = new FlatCompat({
 const eslintConfig = [
   {
     rules: {
-      'react-hooks/exhaustive-deps': 'off',
-       "@typescript-eslint/no-explicit-any": ["off"]
+      "react-hooks/exhaustive-deps": "off",
+      "@typescript-eslint/no-explicit-any": ["off"],
+      "no-undef": "off",
+      "@typescript-eslint/key-spacing": "off",
     },
   },
   {
@@ -23,6 +25,7 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      ".husky/**",
     ],
   },
 ];

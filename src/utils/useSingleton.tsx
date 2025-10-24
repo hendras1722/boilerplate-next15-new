@@ -1,4 +1,3 @@
-// src/utils/useSingleton.tsx
 import React, { type ComponentType } from "react";
 import { createRoot, Root } from "react-dom/client";
 import { Queue } from "./queue";
@@ -77,7 +76,7 @@ async function removeInstance(component: ComponentType<any>) {
  * Semua operasi dijalankan berurutan untuk mencegah race condition.
  */
 export async function useSingleton<T = any>(
-  component: ComponentType<any>
+  component: ComponentType<any>,
 ): Promise<T> {
   const result = await queue.add(() => createInstance(component));
   return result as T;
@@ -87,7 +86,7 @@ export async function useSingleton<T = any>(
  * Menghapus instance global dari daftar singleton.
  */
 export async function removeSingleton(
-   component: ComponentType<any>
- ): Promise<void> {
-   await queue.add(() => removeInstance(component));
- }
+  component: ComponentType<any>,
+): Promise<void> {
+  await queue.add(() => removeInstance(component));
+}
