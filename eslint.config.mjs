@@ -39,7 +39,6 @@ export default tseslint.config(
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/key-spacing": "off",
-      "align-assignments/align-assignments": "error",
       "block-spacing": ["error", "always"],
       "react-hooks/exhaustive-deps": "off",
       "no-undef": "off",
