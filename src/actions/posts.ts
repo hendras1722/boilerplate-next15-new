@@ -31,7 +31,7 @@ export interface PatchPostBody {
 export function useGetPosts() {
   const url = `/api/v1/posts`;
 
-  return useHttp<Post>(url, {
+  return useHttp<Post[]>(url, {
     method: "GET",
     showSuccessToast: false,
     showErrorToast: true,
@@ -39,25 +39,25 @@ export function useGetPosts() {
 }
 
 export function useCreatePost() {
-  return useHttp<Post, CreatePostBody>("/api/v1/posts", {
+  return useHttp<Post, CreatePostBody>("/v1/posts", {
     method: "POST",
   });
 }
 
 export function useUpdatePost(id: string) {
-  return useHttp<Post, UpdatePostBody>(`/api/v1/posts/${id}`, {
+  return useHttp<Post, UpdatePostBody>(`/v1/posts/${id}`, {
     method: "PUT",
   });
 }
 
 export function usePatchPost(id: string) {
-  return useHttp<Post, PatchPostBody>(`/api/v1/posts/${id}`, {
+  return useHttp<Post, PatchPostBody>(`/v1/posts/${id}`, {
     method: "PATCH",
   });
 }
 
 export function useDeletePost(id: string) {
-  return useHttp<{}, void>(`/api/v1/posts/${id}`, {
+  return useHttp<{}, void>(`/v1/posts/${id}`, {
     method: "DELETE",
   });
 }

@@ -1,0 +1,11 @@
+{
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint", // pastikan ESLint extension aktif
+  "editor.formatOnSave": true,
+  "eslint.alwaysShowStatus": true,
+  "eslint.format.enable": true,
+  "eslint.lintTask.enable": true,
+  "eslint.codeActionsOnSave.rules": null,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}

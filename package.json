@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "time next build --turbopack",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
@@ -91,7 +91,7 @@
     "@tailwindcss/oxide",
     "unrs-resolver"
   ],
-   "lint-staged": {
+  "lint-staged": {
     "**/*.{js,jsx,ts,tsx,vue}": "eslint --fix"
   }
 }
