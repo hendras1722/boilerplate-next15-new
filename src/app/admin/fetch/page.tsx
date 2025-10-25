@@ -13,7 +13,8 @@ export default function HttpDemoPage() {
   const [postId, setPostId] = useState("1");
   const [title, setTitle]   = useState("");
   const [body, setBody]     = useState("");
-  
+
+
   // Hooks
   const getPost    = useGetPosts();
   const createPost = useCreatePost();

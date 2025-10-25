@@ -1,4 +1,3 @@
-// eslint.config.js
 import tseslint from "typescript-eslint";
 import importPlugin from "eslint-plugin-import";
 import nPlugin from "eslint-plugin-n";
@@ -44,6 +43,7 @@ export default tseslint.config(
       "block-spacing": ["error", "always"],
       "react-hooks/exhaustive-deps": "off",
       "no-undef": "off",
+      "align-assignments/align-assignments": "warn",
     },
   }
 );

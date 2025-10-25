@@ -1,4 +1,5 @@
 bun run lint:fix
 bun run lint
+bunx lint-staged
 
 echo "bunx commitlint --edit \$1" > .husky/commit-msg
