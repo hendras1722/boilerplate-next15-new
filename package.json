@@ -90,5 +90,8 @@
   "trustedDependencies": [
     "@tailwindcss/oxide",
     "unrs-resolver"
-  ]
+  ],
+   "lint-staged": {
+    "**/*.{js,jsx,ts,tsx,vue}": "eslint --fix"
+  }
 }
