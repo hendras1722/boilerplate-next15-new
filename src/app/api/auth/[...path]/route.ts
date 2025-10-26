@@ -2,6 +2,13 @@ import { type NextRequest, NextResponse } from "next/server";
 
 const API_BASE_URL = "https://auth.syahendra.com/v1/";
 
+/*
+ *
+ * if you not use rewrites in next config
+ * you can use this proxy, else you can delete this file
+ *
+ */
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
@@ -38,7 +45,7 @@ export async function GET(
 
     const data = await response.json();
     return NextResponse.json(data);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },

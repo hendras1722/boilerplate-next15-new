@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 const PUBLIC_ROUTES = ["/"];
 const AUTH_ROUTES   = [
@@ -21,7 +21,7 @@ export default async function middleware(request: NextRequest) {
   const isAuthRoute      = AUTH_ROUTES.some((route) => pathname.startsWith(route));
   const isProtectedRoute = pathname.startsWith("/admin");
 
-  const apiUrl = new URL("/api/auth/getme", request.url);
+  const apiUrl = new URL("/api/getme", request.url);
 
   if (isPublicRoute) return NextResponse.next();
 
@@ -71,7 +71,7 @@ export default async function middleware(request: NextRequest) {
         response.cookies.delete("token");
         return response;
       }
-    } catch (err: any) {
+    } catch (_err) {
       const response = NextResponse.next();
       response.cookies.delete("token");
       return response;
