@@ -19,10 +19,13 @@ interface BaseResponseLogin<T> {
 }
 
 export function useLogin() {
-  return useHttp<BaseResponseLogin<LoginRequest>, LoginRequest>("/v1/posts", {
-    method: "POST",
-    onSuccess: () => {
-      window.location.href = "/admin/dashboard";
+  return useHttp<BaseResponseLogin<LoginRequest>, LoginRequest>(
+    "/api/auth/auth/login",
+    {
+      method: "POST",
+      onSuccess: (data) => {
+        window.location.href = "/admin/dashboard";
+      },
     },
-  });
+  );
 }

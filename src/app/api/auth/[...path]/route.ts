@@ -1,6 +1,7 @@
+import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 
-const API_BASE_URL = "https://auth.syahendra.com/v1/auth/";
+const API_BASE_URL = "https://auth.syahendra.com/v1/";
 
 export async function GET(
   request: NextRequest,
@@ -17,11 +18,12 @@ export async function GET(
     url.search = queryString;
   }
 
-  try {
-    const token =
-      request.cookies.get("oauth/token")?.value ??
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NWQwMmZlYmU5NTAwMjZmOTIwZGFiZiIsImlhdCI6MTc2MTMwMTk3OCwiZXhwIjoxNzYxMzA1NTc4fQ.-o5c0pchYjkUUv2Lcko-JYMCPngEgQQYqD740Z_oLYY";
+  const headersList   = await headers();
+  const authorization = headersList.get("Authorization");
 
+  const token = (authorization || "")?.replace("Bearer ", "");
+
+  try {
     const headers: HeadersInit = {
       "Content-Type": "application/json",
     };
@@ -109,7 +111,20 @@ async function handleRequest(
     });
 
     const data = await response.json();
-    return NextResponse.json(data, { status: response.status });
+    console.log(data, data.data?.token);
+    const responseData = NextResponse.json(data, { status: response.status });
+
+    if (data.data?.token) {
+      responseData.cookies.set("oauth/token", data.data?.token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7, // 7 hari
+      });
+    }
+
+    return responseData;
   } catch (error) {
     console.error("Proxy error:", error);
     return NextResponse.json(
