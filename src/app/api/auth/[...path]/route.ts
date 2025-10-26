@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 
 const API_BASE_URL = "https://auth.syahendra.com/v1/";
@@ -7,9 +6,8 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
 ) {
-  const { path }   = await params;
-  const pathString = path.join("/");
-
+  const { path }     = await params;
+  const pathString   = path.join("/");
   const searchParams = request.nextUrl.searchParams;
   const queryString  = searchParams.toString();
 
@@ -18,33 +16,31 @@ export async function GET(
     url.search = queryString;
   }
 
-  const headersList   = await headers();
-  const authorization = headersList.get("Authorization");
+  const token = request.cookies.get("oauth/token")?.value;
 
-  const token = (authorization || "")?.replace("Bearer ", "");
+  const headers = new Headers();
+  if (token) {
+    headers.append("Authorization", `Bearer ${token}`);
+  }
 
   try {
-    const headers: HeadersInit = {
-      "Content-Type": "application/json",
-    };
-
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    const response = await fetch(url.toString(), {
-      method: request.method,
+    const response = await fetch(url, {
       headers,
       body: request.method !== "GET" ? await request.text() : undefined,
     });
 
-    const data = await response.json();
+    if (!response.ok) {
+      return NextResponse.json(
+        { error: "Failed to fetch data" },
+        { status: response.status },
+      );
+    }
 
-    return NextResponse.json(data, { status: response.status });
+    const data = await response.json();
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("Proxy error:", error);
     return NextResponse.json(
-      { error: "Proxy request failed" },
+      { error: "Internal Server Error" },
       { status: 500 },
     );
   }
@@ -111,14 +107,14 @@ async function handleRequest(
     });
 
     const data = await response.json();
-    console.log(data, data.data?.token);
+
     const responseData = NextResponse.json(data, { status: response.status });
 
     if (data.data?.token) {
       responseData.cookies.set("oauth/token", data.data?.token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        secure: true,
+        sameSite: "strict",
         path: "/",
         maxAge: 60 * 60 * 24 * 7, // 7 hari
       });

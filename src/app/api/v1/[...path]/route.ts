@@ -19,27 +19,24 @@ export async function GET(
   }
 
   try {
-    const headersList   = await headers();
-    const authorization = headersList.get("Authorization");
-
-    const token = (authorization || "")?.replace("Bearer ", "");
+    const token = request.cookies.get("oauth/token")?.value;
 
     const headersInit: HeadersInit = {
       "Content-Type": "application/json",
     };
 
+    const headers = new Headers();
     if (token) {
-      headersInit["Authorization"] = `Bearer ${token}`;
+      headers.append("Authorization", `Bearer ${token}`);
     }
 
     const response = await fetch(url.toString(), {
       method: request.method,
-      headers: headersInit,
+      headers,
       body: request.method !== "GET" ? await request.text() : undefined,
     });
 
     const data = await response.json();
-    console.log(data);
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {

@@ -31,12 +31,12 @@ export default async function middleware(request: NextRequest) {
     }
 
     try {
+      const headers = new Headers(request.headers);
+      headers.set("Authorization", `Bearer ${token}`);
+      headers.set("Content-Type", "application/json");
+
       const res = await fetch(apiUrl.toString(), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          "x-internal-middleware": "true",
-        },
+        headers,
       });
 
       if (!res.ok) {
@@ -56,12 +56,12 @@ export default async function middleware(request: NextRequest) {
 
   if (token && isAuthRoute && request.method === "GET") {
     try {
+      const headers = new Headers(request.headers);
+      headers.set("Authorization", `Bearer ${token}`);
+      headers.set("Content-Type", "application/json");
+
       const res = await fetch(apiUrl.toString(), {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          "x-internal-middleware": "true",
-        },
+        headers,
       });
 
       if (res.ok) {

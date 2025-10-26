@@ -13,9 +13,6 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  const route = useRoute();
-  console.log(route, "iniroute");
-
   // 2. HANDLER FUNCTIONS
   const handleToggleSidebar = useCallback(() => {
     setSidebarCollapsed((prev) => !prev);
