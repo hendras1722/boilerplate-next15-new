@@ -78,7 +78,6 @@ export default async function middleware(request: NextRequest) {
     }
   }
 
-  // Default → lanjut aja
   return NextResponse.next();
 }
 
