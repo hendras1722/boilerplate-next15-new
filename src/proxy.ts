@@ -1,13 +1,14 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-const PUBLIC_ROUTES = ["/"];
-const AUTH_ROUTES   = [
+const PUBLIC_ROUTES  = ["/"];
+const AUTH_ROUTES    = [
   "/login",
   "/register",
   "/change-password",
   "/forgot-password",
   "/callback",
 ];
+const PATH_PROTECTED = ["/admin"];
 
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -19,7 +20,9 @@ export default async function middleware(request: NextRequest) {
 
   const isPublicRoute    = PUBLIC_ROUTES.includes(pathname);
   const isAuthRoute      = AUTH_ROUTES.some((route) => pathname.startsWith(route));
-  const isProtectedRoute = pathname.startsWith("/admin");
+  const isProtectedRoute = PATH_PROTECTED.some((route) =>
+    pathname.startsWith(route),
+  );
 
   const apiUrl = new URL("/api/getme", request.url);
 
