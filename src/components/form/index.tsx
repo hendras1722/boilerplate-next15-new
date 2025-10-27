@@ -1,10 +1,32 @@
-import React, { createContext, useContext, ReactNode, ReactElement } from 'react';
-import { useForm, FormProvider, useFormContext as useRHFContext, Controller, FieldValues, UseFormReturn, SubmitHandler, Resolver, DefaultValues } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ZodSchema } from 'zod';
+"use client";
 
+import React, {
+  createContext,
+  useContext,
+  ReactNode,
+  ReactElement,
+} from "react";
+import {
+  useForm,
+  FormProvider,
+  useFormContext as useRHFContext,
+  Controller,
+  FieldValues,
+  UseFormReturn,
+  SubmitHandler,
+  DefaultValues,
+  useFieldArray,
+} from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ZodSchema } from "zod";
+
+// ---------------------------
+// Types
+// ---------------------------
 interface FormProps<T extends FieldValues> {
-  children: ReactNode | ((methods: UseFormReturn<T> & { submit: () => void }) => ReactNode);
+  children:
+    | ReactNode
+    | ((methods: UseFormReturn<T> & { submit: () => void }) => ReactNode);
   onSubmit: SubmitHandler<T>;
   schema?: ZodSchema<T>;
   defaultValues?: DefaultValues<T>;
@@ -20,19 +42,25 @@ interface FormFieldProps {
   rules?: object;
 }
 
+// ---------------------------
+// Context
+// ---------------------------
 const FormContext = createContext<UseFormReturn<any> | null>(null);
 
+// ---------------------------
+// Form Component
+// ---------------------------
 export const Form = <T extends FieldValues>({
   children,
   onSubmit,
   schema,
   defaultValues,
-  className = ''
+  className = "",
 }: FormProps<T>) => {
   const methods = useForm<T>({
-    resolver: schema ? zodResolver(schema as any) as any : undefined,
+    resolver: schema ? (zodResolver(schema as any) as any) : undefined,
     defaultValues,
-    mode: 'onChange',
+    mode: "onChange",
   });
 
   const submit = () => {
@@ -43,32 +71,41 @@ export const Form = <T extends FieldValues>({
     <FormProvider {...methods}>
       <FormContext.Provider value={methods}>
         <div className={className}>
-          {typeof children === 'function' ? children({ ...methods, submit }) : children}
+          {typeof children === "function" ? children({ ...methods, submit }) : children}
         </div>
       </FormContext.Provider>
     </FormProvider>
   );
 };
 
+// ---------------------------
 // FormField Component
+// ---------------------------
 export const FormField = ({
   name,
   label,
   required = false,
-  className = '',
+  className = "",
   children,
   rules = {},
 }: FormFieldProps) => {
-  const { formState: { errors } } = useRHFContext();
-  const error                     = errors[name];
+  const {
+    formState: { errors },
+  } = useRHFContext();
+
+  const error = name
+    .split(".")
+    .reduce((obj: any, key) => (obj && obj[key] ? obj[key] : undefined), errors);
 
   const fieldRules = {
     ...rules,
-    ...(required && { required: `${label || name} wajib diisi` })
+    ...(required && { required: `${label || name} wajib diisi` }),
   };
 
   if (!children) {
-    throw new Error('FormField requires children. Use <FormField name="..."><input /></FormField>');
+    throw new Error(
+      "FormField requires children. Use <FormField name='...'><input /></FormField>"
+    );
   }
 
   return (
@@ -78,7 +115,7 @@ export const FormField = ({
       render={({ field }) => (
         <div className={`mb-4 ${className}`}>
           {label && (
-            <label htmlFor={name} className="block text-sm font-medium mb-1">
+            <label htmlFor={name} className="block text-sm font-medium mb-1 text-white">
               {label}
               {required && <span className="text-red-500 ml-1">*</span>}
             </label>
@@ -86,12 +123,12 @@ export const FormField = ({
           {React.cloneElement(children, {
             ...field,
             id: name,
-            'aria-invalid': !!error,
-            'aria-describedby': error ? `${name}-error` : undefined
+            "aria-invalid": !!error,
+            "aria-describedby": error ? `${name}-error` : undefined,
           })}
           {error && (
-            <p id={`${name}-error`} className="mt-1 text-sm text-red-600">
-              {error.message as string}
+            <p id={`${name}-error`} className="mt-1 text-sm text-red-400">
+              {(error.message || "Field tidak valid") as string}
             </p>
           )}
         </div>
@@ -100,10 +137,38 @@ export const FormField = ({
   );
 };
 
-export const useFormContext = <T extends FieldValues = FieldValues>(): UseFormReturn<T> => {
+// ---------------------------
+// useFormContext
+// ---------------------------
+export const useFormContext = <
+  T extends FieldValues = FieldValues,
+>(): UseFormReturn<T> => {
   const context = useContext(FormContext);
   if (!context) {
-    throw new Error('useFormContext must be used within a Form component');
+    throw new Error("useFormContext must be used within a Form component");
   }
   return context as UseFormReturn<T>;
+};
+
+// ---------------------------
+// useFormField (Dynamic Array)
+// ---------------------------
+export const useFormField = (name: string) => {
+  const methods                                                         = useRHFContext(); // pakai FormProvider react-hook-form
+  const { fields, append, remove, insert, update, prepend, swap, move } =
+    useFieldArray({
+      control: methods.control,
+      name,
+    });
+
+  return {
+    fields,
+    append,
+    remove,
+    insert,
+    update,
+    prepend,
+    swap,
+    move,
+  };
 };

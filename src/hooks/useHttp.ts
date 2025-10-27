@@ -1,7 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { toast } from "sonner";
 import {
   fetchRequest,
@@ -11,7 +11,7 @@ import {
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
-interface UseHttpOptions<TResponse, TBody = unknown> {
+export interface UseHttpOptions<TResponse, TBody = unknown> {
   method?: HttpMethod;
   body?: TBody;
   onSuccess?: (data: TResponse) => void;
@@ -27,7 +27,7 @@ interface UseHttpOptions<TResponse, TBody = unknown> {
   requestOptions?: Omit<RequestOptions, "method" | "body">;
 }
 
-interface UseHttpReturn<TResponse, TBody = unknown> {
+export interface UseHttpReturn<TResponse, TBody = unknown> {
   execute: (executeBody?: TBody) => Promise<TResponse>;
   data: TResponse | null;
   error: Error | null;
@@ -40,7 +40,11 @@ export function useHttp<TResponse, TBody = unknown>(
   url: string,
   options?: UseHttpOptions<TResponse, TBody>,
 ): UseHttpReturn<TResponse, TBody> {
-  const queryClient           = useQueryClient();
+  const queryClient = useQueryClient();
+
+  // ✅ fix: memoize options agar stabil meski parent kirim object literal baru tiap render
+  const stableOptions = useMemo(() => options ?? {}, [JSON.stringify(options)]);
+
   const [data, setData]       = useState<TResponse | null>(null);
   const [error, setError]     = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
@@ -55,7 +59,9 @@ export function useHttp<TResponse, TBody = unknown>(
     invalidateQueries,
     key,
     requestOptions,
-  } = options || {};
+    onSuccess,
+    onError,
+  } = stableOptions;
 
   const normalizedKey = Array.isArray(key) ? key : key ? [key] : undefined;
 
@@ -67,18 +73,15 @@ export function useHttp<TResponse, TBody = unknown>(
       try {
         const payload = executeBody ?? defaultBody;
 
-        // Prepare request options
         const reqOptions: RequestOptions = {
           ...requestOptions,
           method: method.toLowerCase() as Lowercase<HttpMethod>,
         };
 
-        // Add body for non-GET requests
         if (payload && method !== "GET") {
           reqOptions.body = payload as Record<string, unknown>;
         }
 
-        // Make request - fetchRequest is a regular function, not a hook
         const { data: responseData } = await fetchRequest<TResponse>(
           url,
           reqOptions,
@@ -86,12 +89,10 @@ export function useHttp<TResponse, TBody = unknown>(
 
         setData(responseData);
 
-        // Update react-query cache if key is provided
         if (normalizedKey) {
           queryClient.setQueryData(normalizedKey, responseData);
         }
 
-        // Show success toast
         if (showSuccessToast) {
           toast.success("Success", {
             duration: 1000,
@@ -102,10 +103,8 @@ export function useHttp<TResponse, TBody = unknown>(
           });
         }
 
-        // Call success callback
-        options?.onSuccess?.(responseData);
+        onSuccess?.(responseData);
 
-        // Invalidate queries if specified
         if (invalidateQueries) {
           await queryClient.invalidateQueries({ queryKey: invalidateQueries });
         }
@@ -117,10 +116,8 @@ export function useHttp<TResponse, TBody = unknown>(
           err instanceof Error ? err : new Error("Unknown error");
         setError(errorObj);
 
-        // Show error toast
         if (showErrorToast) {
           const message = errorMessage || getErrorMessage(err);
-
           toast.error("Error", {
             duration: 2000,
             description: message,
@@ -130,9 +127,7 @@ export function useHttp<TResponse, TBody = unknown>(
           });
         }
 
-        // Call error callback
-        options?.onError?.(errorObj);
-
+        onError?.(errorObj);
         setLoading(false);
         throw errorObj;
       }
@@ -142,7 +137,6 @@ export function useHttp<TResponse, TBody = unknown>(
       method,
       defaultBody,
       queryClient,
-      options,
       successMessage,
       errorMessage,
       showSuccessToast,
@@ -150,6 +144,8 @@ export function useHttp<TResponse, TBody = unknown>(
       invalidateQueries,
       normalizedKey,
       requestOptions,
+      onSuccess,
+      onError,
     ],
   );
 

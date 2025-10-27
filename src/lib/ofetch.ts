@@ -51,8 +51,8 @@ interface FormInstance {
 }
 
 // Constants
-const TOKEN_COOKIE_NAME     = "oauth/token";
-const API_URL               = "/api/v1";
+const TOKEN_COOKIE_NAME     = "token";
+const API_URL               = "/api";
 const DEFAULT_TIMEOUT       = 30000;
 const DEFAULT_TOKEN_MAX_AGE = 7 * 24 * 60 * 60; // 7 days
 

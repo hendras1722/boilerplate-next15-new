@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { ofetch } from "ofetch";
 
 const PUBLIC_ROUTES  = ["/"];
 const AUTH_ROUTES    = [
@@ -12,8 +13,10 @@ const PATH_PROTECTED = ["/admin"];
 
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token        = request.cookies.get("oauth/token")?.value || null;
+  const token        = request.cookies.get("token")?.value || null;
+  const baseURL      = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
+  // Skip middleware for internal requests
   if (request.headers.get("x-internal-middleware") === "true") {
     return NextResponse.next();
   }
@@ -24,29 +27,22 @@ export default async function middleware(request: NextRequest) {
     pathname.startsWith(route),
   );
 
-  const apiUrl = new URL("/api/getme", request.url);
-
+  // Allow public routes
   if (isPublicRoute) return NextResponse.next();
 
+  // Handle protected routes
   if (isProtectedRoute) {
     if (!token) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
     try {
-      const headers = new Headers(request.headers);
-      headers.set("Authorization", `Bearer ${token}`);
-      headers.set("Content-Type", "application/json");
-
-      const res = await fetch(apiUrl.toString(), {
-        headers,
+      await ofetch(`${baseURL}/api/getme`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
-
-      if (!res.ok) {
-        const response = NextResponse.redirect(new URL("/login", request.url));
-        response.cookies.delete("token");
-        return response;
-      }
 
       return NextResponse.next();
     } catch (err) {
@@ -59,22 +55,17 @@ export default async function middleware(request: NextRequest) {
 
   if (token && isAuthRoute && request.method === "GET") {
     try {
-      const headers = new Headers(request.headers);
-      headers.set("Authorization", `Bearer ${token}`);
-      headers.set("Content-Type", "application/json");
-
-      const res = await fetch(apiUrl.toString(), {
-        headers,
+      await ofetch(`${baseURL}/api/getme`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
 
-      if (res.ok) {
-        return NextResponse.redirect(new URL("/admin/dashboard", request.url));
-      } else {
-        const response = NextResponse.next();
-        response.cookies.delete("token");
-        return response;
-      }
+      // If token is valid, redirect to dashboard
+      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
     } catch (_err) {
+      // Token is invalid, clear cookie and allow access to auth page
       const response = NextResponse.next();
       response.cookies.delete("token");
       return response;

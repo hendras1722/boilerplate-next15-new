@@ -16,13 +16,32 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { PaginationNuxt } from '../Pagination'
+
+type PaginationState = {
+  pageIndex: number
+  pageSize: number
+}
 
 type DataTableProps<TData> = {
   columns: ColumnDef<TData, any>[]
   data: TData[]
+
+  // 🔹 Optional controlled pagination from parent
+  paginate?: PaginationState
+  setPaginate?: React.Dispatch<React.SetStateAction<PaginationState>>
+
+  // 🔹 Optional page size options
   pageSizeOptions?: number[]
+
+  // 🔹 Pagination display options
   showEdges?: boolean
   showEllipsis?: boolean
 }
@@ -30,36 +49,38 @@ type DataTableProps<TData> = {
 export default function ShadcnDataTable<TData>({
   columns,
   data,
+  paginate,
+  setPaginate,
   pageSizeOptions = [5, 10, 20, 50],
   showEdges = true,
   showEllipsis = true,
 }: DataTableProps<TData>) {
-  const [pageSize, setPageSize] = React.useState(pageSizeOptions[0])
+  // 🧩 Internal state (only used if parent doesn’t control pagination)
+  const [internalPaginate, setInternalPaginate] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: pageSizeOptions[0],
+  })
+
+  // 🧠 Use external paginate if provided, else fallback to internal
+  const pagination    = paginate ?? internalPaginate
+  const setPagination = setPaginate ?? setInternalPaginate
 
   const table = useReactTable({
     data,
     columns,
+    state: { pagination },
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    state: {
-      pagination: {
-        pageIndex: 0,
-        pageSize,
-      },
-    },
-    onPaginationChange: (updater) => {
-      const state = typeof updater === 'function' ? updater(table.getState().pagination) : updater
-      table.setPageIndex(state.pageIndex)
-      table.setPageSize(state.pageSize)
-    },
-    manualPagination: false,
+    manualPagination: false, // can be made true for server pagination
   })
 
-  const currentPage = table.getState().pagination.pageIndex + 1
+  const currentPage = pagination.pageIndex + 1
   const totalPages  = table.getPageCount()
 
   return (
     <div className="w-full space-y-4">
+      {/* 🧱 Table */}
       <div className="rounded-lg border bg-card">
         <Table>
           <TableHeader>
@@ -89,7 +110,10 @@ export default function ShadcnDataTable<TData>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center text-muted-foreground">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center text-muted-foreground"
+                >
                   No results.
                 </TableCell>
               </TableRow>
@@ -98,15 +122,19 @@ export default function ShadcnDataTable<TData>({
         </Table>
       </div>
 
+      {/* 🔢 Pagination controls */}
       <div className="flex items-center justify-between flex-wrap gap-2">
+        {/* Rows per page */}
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Rows per page:</span>
           <Select
-            value={String(pageSize)}
-            onValueChange={(value) => setPageSize(Number(value))}
+            value={String(pagination.pageSize)}
+            onValueChange={(value) =>
+              setPagination(prev => ({ ...prev, pageSize: Number(value), pageIndex: 0 }))
+            }
           >
             <SelectTrigger className="ShadcnDataTable">
-              <SelectValue placeholder={pageSize} />
+              <SelectValue placeholder={String(pagination.pageSize)} />
             </SelectTrigger>
             <SelectContent>
               {pageSizeOptions.map(size => (
@@ -118,11 +146,12 @@ export default function ShadcnDataTable<TData>({
           </Select>
         </div>
 
+        {/* Page navigation */}
         <div className="flex flex-col items-end gap-2">
           <PaginationNuxt
             page={currentPage}
             total={totalPages}
-            onChange={(p) => table.setPageIndex(p - 1)}
+            onChange={(p) => setPagination(prev => ({ ...prev, pageIndex: p - 1 }))}
             siblingCount={1}
             showEdges={showEdges}
             showEllipsis={showEllipsis}

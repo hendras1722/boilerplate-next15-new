@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-const API_BASE_URL = "https://auth.syahendra.com/v1/";
+const API_BASE_URL = "/";
 
 /*
  *
