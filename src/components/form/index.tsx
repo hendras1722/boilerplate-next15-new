@@ -111,7 +111,7 @@ export const FormField = ({
               {required && <span className="text-red-500 ml-1">*</span>}
             </label>
           )}
-          {React.cloneElement(children, {
+          {React.cloneElement(children as React.ReactElement<any>, {
             ...field,
             id: name,
             "aria-invalid": !!error,
