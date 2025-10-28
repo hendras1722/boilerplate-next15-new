@@ -1,43 +1,53 @@
-"use client"
+"use client";
 
-import { useQueryClient } from "@tanstack/react-query"
-import { useState, useCallback } from "react"
-import { toast } from "sonner"
+import { useQueryClient } from "@tanstack/react-query";
+import { useState, useCallback, useMemo } from "react";
+import { toast } from "sonner";
+import {
+  fetchRequest,
+  getErrorMessage,
+  type RequestOptions,
+} from "../lib/ofetch";
 
-// import { useToast } from "@/hooks/use-toast"
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
-type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH"
-
-interface UseHttpOptions<TResponse, TBody = unknown> {
-  method?: HttpMethod
-  body?: TBody
-  onSuccess?: (data: TResponse) => void
-  onError?: (error: Error) => void
-  showSuccessToast?: boolean
-  showErrorToast?: boolean
-  successMessage?: string
-  errorMessage?: string
-  invalidateQueries?: readonly unknown[]
+export interface UseHttpOptions<TResponse, TBody = unknown> {
+  method?: HttpMethod;
+  body?: TBody;
+  onSuccess?: (data: TResponse) => void;
+  onError?: (error: Error) => void;
+  showSuccessToast?: boolean;
+  showErrorToast?: boolean;
+  successMessage?: string;
+  errorMessage?: string;
+  invalidateQueries?: readonly unknown[];
+  /** Custom key untuk identifikasi unik request */
+  key?: string | readonly unknown[];
+  /** Additional request options */
+  requestOptions?: Omit<RequestOptions, "method" | "body">;
 }
 
-interface UseHttpReturn<TResponse, TBody = unknown> {
-  execute: (executeBody?: TBody) => Promise<TResponse>
-  data: TResponse | null
-  error: Error | null
-  loading: boolean
-  reset: () => void
+export interface UseHttpReturn<TResponse, TBody = unknown> {
+  execute: (executeBody?: TBody) => Promise<TResponse>;
+  data: TResponse | null;
+  error: Error | null;
+  loading: boolean;
+  reset: () => void;
+  key?: string | readonly unknown[];
 }
 
 export function useHttp<TResponse, TBody = unknown>(
   url: string,
   options?: UseHttpOptions<TResponse, TBody>,
 ): UseHttpReturn<TResponse, TBody> {
+  const queryClient = useQueryClient();
 
-  const queryClient = useQueryClient()
+  // ✅ fix: memoize options agar stabil meski parent kirim object literal baru tiap render
+  const stableOptions = useMemo(() => options ?? {}, [JSON.stringify(options)]);
 
-  const [data, setData]       = useState<TResponse | null>(null)
-  const [error, setError]     = useState<Error | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [data, setData]       = useState<TResponse | null>(null);
+  const [error, setError]     = useState<Error | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const {
     method = "POST",
@@ -47,90 +57,103 @@ export function useHttp<TResponse, TBody = unknown>(
     successMessage,
     errorMessage,
     invalidateQueries,
-  } = options || {}
+    key,
+    requestOptions,
+    onSuccess,
+    onError,
+  } = stableOptions;
+
+  const normalizedKey = Array.isArray(key) ? key : key ? [key] : undefined;
 
   const execute = useCallback(
     async (executeBody?: TBody): Promise<TResponse> => {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
       try {
-        const payload = executeBody ?? defaultBody
+        const payload = executeBody ?? defaultBody;
 
-        const fetchOptions: RequestInit = {
-          method,
-          headers: { "Content-Type": "application/json" },
-        }
+        const reqOptions: RequestOptions = {
+          ...requestOptions,
+          method: method.toLowerCase() as Lowercase<HttpMethod>,
+        };
 
         if (payload && method !== "GET") {
-          fetchOptions.body = JSON.stringify(payload)
+          reqOptions.body = payload as Record<string, unknown>;
         }
 
-        const response = await fetch(url, fetchOptions)
+        const { data: responseData } = await fetchRequest<TResponse>(
+          url,
+          reqOptions,
+        );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
+        setData(responseData);
+
+        if (normalizedKey) {
+          queryClient.setQueryData(normalizedKey, responseData);
         }
 
-        const result = await response.json()
-        setData(result)
-
-        // Success toast
         if (showSuccessToast) {
-        //   toast({
-        //     title: "Success",
-        //     description: successMessage || `${method} request successful`,
-        //   })
-        //
-        toast.success("Success", {
-          duration: 1000,
-          description: successMessage || `${method} request successful`,
-          className: '!text-green-800',
-          descriptionClassName: '!text-green-700',
-          richColors: true,
-        })
-        }
-
-        // Success callback
-        options?.onSuccess?.(result)
-
-        // Invalidate queries if specified
-        if (invalidateQueries) {
-          queryClient.invalidateQueries({ queryKey: invalidateQueries })
-        }
-
-        setLoading(false)
-        return result
-      } catch (err) {
-        const error = err instanceof Error ? err : new Error("Unknown error")
-        setError(error)
-
-        // Error toast
-        if (showErrorToast) {
-          toast.error("Error", {
+          toast.success("Success", {
             duration: 1000,
-            description: errorMessage || error.message || `${method} request failed`,
-            className: '!text-green-800',
-            descriptionClassName: '!text-green-700',
+            description: successMessage || `${method} request successful`,
+            className: "!text-green-800",
+            descriptionClassName: "!text-green-700",
             richColors: true,
-          })
+          });
         }
 
-        // Error callback
-        options?.onError?.(error)
+        onSuccess?.(responseData);
 
-        setLoading(false)
-        throw error
+        if (invalidateQueries) {
+          await queryClient.invalidateQueries({ queryKey: invalidateQueries });
+        }
+
+        setLoading(false);
+        return responseData;
+      } catch (err) {
+        const errorObj =
+          err instanceof Error ? err : new Error("Unknown error");
+        setError(errorObj);
+
+        if (showErrorToast) {
+          const message = errorMessage || getErrorMessage(err);
+          toast.error("Error", {
+            duration: 2000,
+            description: message,
+            className: "!text-red-800",
+            descriptionClassName: "!text-red-700",
+            richColors: true,
+          });
+        }
+
+        onError?.(errorObj);
+        setLoading(false);
+        throw errorObj;
       }
     },
-    [url, method, defaultBody, queryClient, options, successMessage, errorMessage, showSuccessToast, showErrorToast, invalidateQueries]
-  )
+    [
+      url,
+      method,
+      defaultBody,
+      queryClient,
+      successMessage,
+      errorMessage,
+      showSuccessToast,
+      showErrorToast,
+      invalidateQueries,
+      normalizedKey,
+      requestOptions,
+      onSuccess,
+      onError,
+    ],
+  );
 
   const reset = useCallback(() => {
-    setData(null)
-    setError(null)
-    setLoading(false)
-  }, [])
+    setData(null);
+    setError(null);
+    setLoading(false);
+  }, []);
 
   return {
     execute,
@@ -138,5 +161,6 @@ export function useHttp<TResponse, TBody = unknown>(
     error,
     loading,
     reset,
-  }
+    key,
+  };
 }
