@@ -41,7 +41,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="flex h-screen overflow-hidden w-full bg-background text-foreground">
       {!sidebarCollapsed && (
         <Button
-          variant={'ghost'}
+          variant={"ghost"}
           className="fixed inset-0 bg-black/40 z-40 lg:hidden"
           onClick={handleToggleSidebar}
         />
@@ -75,7 +75,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     </div>
   );
 }
-
 
 export function DashboardPage() {
   return (

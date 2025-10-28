@@ -1,10 +1,9 @@
-'use client'
+"use client";
 
-import React from 'react'
-import { usePathname } from 'next/navigation'
+import React from "react";
+import { usePathname } from "next/navigation";
 
-
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -12,38 +11,45 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { DarkModeToggle } from './DarkMode'
-import { Icon } from '@iconify/react'
-import { Each } from 'use-react-utilities'
+} from "@/components/ui/breadcrumb";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DarkModeToggle } from "./DarkMode";
+import { Icon } from "@iconify/react";
+import { Each } from "use-react-utilities";
 
 interface AppHeaderProps {
-  onMenuClick: () => void
-  avatarSrc?: string
-  avatarFallback?: string
-  userName?: string
-  onNotifications?: () => void
-  onProfile?: () => void
-  onSettings?: () => void
-  onSupport?: () => void
-  onLogout?: () => void
+  onMenuClick: () => void;
+  avatarSrc?: string;
+  avatarFallback?: string;
+  userName?: string;
+  onNotifications?: () => void;
+  onProfile?: () => void;
+  onSettings?: () => void;
+  onSupport?: () => void;
+  onLogout?: () => void;
 }
 
 export function AppHeader({
   onMenuClick,
-  avatarSrc = 'https://i.pravatar.cc/100?u=admin',
-  avatarFallback = 'AU',
-  userName = 'Admin User',
+  avatarSrc = "https://i.pravatar.cc/100?u=admin",
+  avatarFallback = "AU",
+  userName = "Admin User",
   onNotifications,
   onProfile,
   onSettings,
   onSupport,
   onLogout,
 }: AppHeaderProps) {
-  const pathname    = usePathname()
-  const breadcrumbs = pathname.split('/').filter(Boolean)
+  const pathname    = usePathname();
+  const breadcrumbs = pathname.split("/").filter(Boolean);
 
   return (
     <header className="h-16 border-b border-border bg-card/80 backdrop-blur-sm flex items-center justify-between px-6">
@@ -53,27 +59,30 @@ export function AppHeader({
           variant="ghost"
           size="icon"
           onClick={onMenuClick}
-          className='hover:!bg-primary/50'
+          className="hover:!bg-primary/50"
         >
           <Icon icon="lucide:menu" className="h-6 w-6" />
         </Button>
 
         <Breadcrumb>
           <BreadcrumbList>
-            <Each of={breadcrumbs} render={(crumb, idx) => (
-              <React.Fragment key={idx}>
-                <BreadcrumbItem>
-                  {idx < breadcrumbs.length - 1 ? (
-                    <BreadcrumbLink href={`/${breadcrumbs.slice(0, idx + 1).join('/')}`}>
-                      {crumb}
-                    </BreadcrumbLink>
-                  ) : (
-                    <BreadcrumbPage>{crumb}</BreadcrumbPage>
-                  )}
-                </BreadcrumbItem>
-                {idx < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
-              </React.Fragment>
-            )} />
+            <Each
+              of={breadcrumbs}
+              render={(crumb, idx) => (
+                <React.Fragment key={idx}>
+                  <BreadcrumbItem>
+                    {idx < breadcrumbs.length - 1 ? (
+                      <BreadcrumbLink href={`/${breadcrumbs.slice(0, idx + 1).join("/")}`}>
+                        {crumb}
+                      </BreadcrumbLink>
+                    ) : (
+                      <BreadcrumbPage>{crumb}</BreadcrumbPage>
+                    )}
+                  </BreadcrumbItem>
+                  {idx < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+                </React.Fragment>
+              )}
+            />
           </BreadcrumbList>
         </Breadcrumb>
       </div>
@@ -84,20 +93,16 @@ export function AppHeader({
           variant="ghost"
           size="icon"
           onClick={onNotifications}
-          className='hover:!bg-primary/50'
+          className="hover:!bg-primary/50"
         >
-          <Icon icon="lucide:bell"  className="h-5 w-5"/>
+          <Icon icon="lucide:bell" className="h-5 w-5" />
         </Button>
 
         <DarkModeToggle />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              aria-label="Open user menu"
-              variant="ghost"
-              className="rounded-full w-9 h-9"
-            >
+            <Button aria-label="Open user menu" variant="ghost" className="rounded-full w-9 h-9">
               <Avatar>
                 <AvatarImage src={avatarSrc} alt="avatar" />
                 <AvatarFallback>{avatarFallback}</AvatarFallback>
@@ -124,5 +129,5 @@ export function AppHeader({
         </DropdownMenu>
       </div>
     </header>
-  )
+  );
 }

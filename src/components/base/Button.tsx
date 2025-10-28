@@ -15,10 +15,7 @@ export default function BaseButton({
   }) {
   const { slots } = useSlots(children);
   return (
-    <Button
-      {...props}
-      className={cn(buttonVariants({ variant, size, className }))}
-    >
+    <Button {...props} className={cn(buttonVariants({ variant, size, className }))}>
       {slots.leading && <span className="mr-1">{slots.leading}</span>}
       {children}
       {slots.trailing && <span className="ml-1">{slots.trailing}</span>}

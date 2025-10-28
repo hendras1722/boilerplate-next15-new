@@ -1,52 +1,52 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useEffect, useRef, useCallback, useMemo } from "react"
-import { Icon } from "@iconify/react"
+import type React from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { Icon } from "@iconify/react";
 
 export interface MultiSelectItem {
-  value: string | number
-  label: string
-  disabled?: boolean
-  icon?: string
-  children?: MultiSelectItem[]
-  onSelect?: (event: React.MouseEvent) => void
+  value: string | number;
+  label: string;
+  disabled?: boolean;
+  icon?: string;
+  children?: MultiSelectItem[];
+  onSelect?: (event: React.MouseEvent) => void;
 }
 
 export interface FetchQuery {
-  page: number
-  limit: number
-  page_size: number
-  q: string
-  search: string
+  page: number;
+  limit: number;
+  page_size: number;
+  q: string;
+  search: string;
 }
 
-type FetchResult = Record<string, any>
+type FetchResult = Record<string, any>;
 
-type Variant = "solid" | "outline" | "soft"
-type Size = "sm" | "md" | "lg"
+type Variant = "solid" | "outline" | "soft";
+type Size = "sm" | "md" | "lg";
 
 interface MultiSelectProps {
-  id?: string
-  name?: string
-  value?: MultiSelectItem | MultiSelectItem[]
-  defaultValue?: MultiSelectItem | MultiSelectItem[]
-  onChange?: (value?: MultiSelectItem | MultiSelectItem[]) => void
-  items?: MultiSelectItem[]
-  multiple?: boolean
-  url?: string
-  limit?: number
-  paginated?: boolean
-  variant?: Variant
-  size?: Size
-  transformFetchData?: (result: FetchResult) => MultiSelectItem[]
-  transformFetchQuery?: (params: FetchQuery) => Record<string, string | number>
-  placeholder?: string
-  loading?: boolean
-  debounce?: number
-  disabled?: boolean
-  className?: string
-  searchInput?: boolean
+  id?: string;
+  name?: string;
+  value?: MultiSelectItem | MultiSelectItem[];
+  defaultValue?: MultiSelectItem | MultiSelectItem[];
+  onChange?: (value?: MultiSelectItem | MultiSelectItem[]) => void;
+  items?: MultiSelectItem[];
+  multiple?: boolean;
+  url?: string;
+  limit?: number;
+  paginated?: boolean;
+  variant?: Variant;
+  size?: Size;
+  transformFetchData?: (result: FetchResult) => MultiSelectItem[];
+  transformFetchQuery?: (params: FetchQuery) => Record<string, string | number>;
+  placeholder?: string;
+  loading?: boolean;
+  debounce?: number;
+  disabled?: boolean;
+  className?: string;
+  searchInput?: boolean;
 }
 
 export const MultiSelect: React.FC<MultiSelectProps> = ({
@@ -61,12 +61,12 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   variant = "outline",
   size = "md",
   transformFetchData = (result: FetchResult) => {
-    const data = result?.data ?? result?.results ?? result?.items ?? []
-    if (!Array.isArray(data)) return []
+    const data = result?.data ?? result?.results ?? result?.items ?? [];
+    if (!Array.isArray(data)) return [];
     return data.map((val: any) => ({
       value: val.id ?? "",
       label: val.name ?? "",
-    }))
+    }));
   },
   transformFetchQuery = (params) => ({
     q: params.search,
@@ -80,74 +80,79 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   className = "",
   searchInput = true,
 }) => {
-  const [selected, setSelected]                 = useState<MultiSelectItem | MultiSelectItem[] | undefined>(value || defaultValue)
-  const [data, setData]                         = useState<MultiSelectItem[]>([])
-  const [search, setSearch]                     = useState("")
-  const [open, setOpen]                         = useState(false)
-  const [isLoading, setIsLoading]               = useState(loading)
-  const [page, setPage]                         = useState(1)
-  const [hasMore, setHasMore]                   = useState(true)
-  const [dropdownPosition, setDropdownPosition] = useState<"bottom" | "top">("bottom")
-  const debounceTimeout                         = useRef<NodeJS.Timeout | null>(null)
-  const containerRef                            = useRef<HTMLDivElement>(null)
-  const dropdownRef                             = useRef<HTMLDivElement>(null)
-  const isFetchingRef                           = useRef(false)
+  const [selected, setSelected]                 = useState<MultiSelectItem | MultiSelectItem[] | undefined>(
+    value || defaultValue
+  );
+  const [data, setData]                         = useState<MultiSelectItem[]>([]);
+  const [search, setSearch]                     = useState("");
+  const [open, setOpen]                         = useState(false);
+  const [isLoading, setIsLoading]               = useState(loading);
+  const [page, setPage]                         = useState(1);
+  const [hasMore, setHasMore]                   = useState(true);
+  const [dropdownPosition, setDropdownPosition] = useState<"bottom" | "top">("bottom");
+  const debounceTimeout                         = useRef<NodeJS.Timeout | null>(null);
+  const containerRef                            = useRef<HTMLDivElement>(null);
+  const dropdownRef                             = useRef<HTMLDivElement>(null);
+  const isFetchingRef                           = useRef(false);
 
-  const _items = useMemo(() => (Array.isArray(items) && items.length > 0 ? items : data), [items, data])
+  const _items = useMemo(
+    () => (Array.isArray(items) && items.length > 0 ? items : data),
+    [items, data]
+  );
 
   const filteredItems = useMemo(() => {
     if (url) {
       // API mode: use items from API
-      return _items
+      return _items;
     }
 
     // Local mode: filter items based on search query
     if (!search.trim()) {
-      return _items
+      return _items;
     }
 
-    const searchLower = search.toLowerCase()
-    return _items.filter((item) => item.label.toLowerCase().includes(searchLower))
-  }, [_items, search, url])
+    const searchLower = search.toLowerCase();
+    return _items.filter((item) => item.label.toLowerCase().includes(searchLower));
+  }, [_items, search, url]);
 
   useEffect(() => {
-    if (value !== undefined) setSelected(value)
-  }, [value])
+    if (value !== undefined) setSelected(value);
+  }, [value]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setOpen(false)
+        setOpen(false);
       }
-    }
+    };
 
     if (open) {
-      document.addEventListener("mousedown", handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [open])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) {
-      setSearch("")
-      setPage(1)
+      setSearch("");
+      setPage(1);
     }
-  }, [open])
+  }, [open]);
 
   useEffect(() => {
     const checkAndUpdatePosition = () => {
       if (open && containerRef.current) {
-        const rect           = containerRef.current.getBoundingClientRect()
-        const spaceBelow     = window.innerHeight - rect.bottom
-        const spaceAbove     = rect.top
-        const dropdownHeight = 320
+        const rect           = containerRef.current.getBoundingClientRect();
+        const spaceBelow     = window.innerHeight - rect.bottom;
+        const spaceAbove     = rect.top;
+        const dropdownHeight = 320;
 
-        const shouldBeTop = spaceBelow < dropdownHeight && spaceAbove > spaceBelow
-        setDropdownPosition(shouldBeTop ? "top" : "bottom")
+        const shouldBeTop = spaceBelow < dropdownHeight && spaceAbove > spaceBelow;
+        setDropdownPosition(shouldBeTop ? "top" : "bottom");
 
         // Scroll into view when dropdown opens or position changes
         setTimeout(() => {
@@ -155,44 +160,44 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
             behavior: "smooth",
             block: "nearest",
             inline: "nearest",
-          })
-        }, 50)
+          });
+        }, 50);
       }
-    }
+    };
 
     if (open) {
-      checkAndUpdatePosition()
+      checkAndUpdatePosition();
 
       // Re-check position on scroll and resize
-      window.addEventListener("scroll", checkAndUpdatePosition, true)
-      window.addEventListener("resize", checkAndUpdatePosition)
+      window.addEventListener("scroll", checkAndUpdatePosition, true);
+      window.addEventListener("resize", checkAndUpdatePosition);
 
       return () => {
-        window.removeEventListener("scroll", checkAndUpdatePosition, true)
-        window.removeEventListener("resize", checkAndUpdatePosition)
-      }
+        window.removeEventListener("scroll", checkAndUpdatePosition, true);
+        window.removeEventListener("resize", checkAndUpdatePosition);
+      };
     }
-  }, [open])
+  }, [open]);
 
   // Block body scroll when dropdown is open
   useEffect(() => {
     if (open) {
-      document.body.style.overflow = "hidden"
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = ""
+      document.body.style.overflow = "";
     }
 
     return () => {
-      document.body.style.overflow = ""
-    }
-  }, [open])
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   const fetchData = useCallback(
     (page: number, search: string, append: boolean) => {
-      if (!url || isFetchingRef.current) return
+      if (!url || isFetchingRef.current) return;
 
-      isFetchingRef.current = true
-      setIsLoading(true)
+      isFetchingRef.current = true;
+      setIsLoading(true);
 
       const params: FetchQuery = {
         page,
@@ -200,20 +205,20 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         page_size: limit,
         q: search,
         search,
-      }
+      };
 
-      const queryParams = transformFetchQuery(params)
+      const queryParams = transformFetchQuery(params);
       const queryString = new URLSearchParams(
         Object.entries(queryParams).reduce(
           (acc, [key, value]) => {
-            acc[key] = String(value)
-            return acc
+            acc[key] = String(value);
+            return acc;
           },
-          {} as Record<string, string>,
-        ),
-      ).toString()
+          {} as Record<string, string>
+        )
+      ).toString();
 
-      const fetchUrl = `${url}${url.includes("?") ? "&" : "?"}${queryString}`
+      const fetchUrl = `${url}${url.includes("?") ? "&" : "?"}${queryString}`;
 
       fetch(fetchUrl, {
         method: "GET",
@@ -223,103 +228,104 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
       })
         .then((response) => response.json())
         .then((result) => {
-          const newData = transformFetchData(result)
-          setData((prevData) => (append ? [...prevData, ...newData] : newData))
-          setHasMore(newData.length === limit)
+          const newData = transformFetchData(result);
+          setData((prevData) => (append ? [...prevData, ...newData] : newData));
+          setHasMore(newData.length === limit);
         })
         .catch((error) => {
-          console.error("Error fetching data:", error)
+          console.error("Error fetching data:", error);
         })
         .finally(() => {
-          isFetchingRef.current = false
-          setIsLoading(false)
-        })
+          isFetchingRef.current = false;
+          setIsLoading(false);
+        });
     },
-    [url, limit, transformFetchData, transformFetchQuery],
-  )
+    [url, limit, transformFetchData, transformFetchQuery]
+  );
 
   useEffect(() => {
-    if (!url) return
+    if (!url) return;
 
     if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current)
+      clearTimeout(debounceTimeout.current);
     }
 
     debounceTimeout.current = setTimeout(() => {
-      setPage(1)
-      fetchData(1, search, false)
-    }, debounce)
+      setPage(1);
+      fetchData(1, search, false);
+    }, debounce);
 
     return () => {
       if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current)
+        clearTimeout(debounceTimeout.current);
       }
-    }
-  }, [search, url, debounce, fetchData])
+    };
+  }, [search, url, debounce, fetchData]);
 
   const handleScroll = useCallback(
     (e: React.UIEvent<HTMLDivElement>) => {
-      if (!paginated || !hasMore || isLoading || !url || isFetchingRef.current) return
+      if (!paginated || !hasMore || isLoading || !url || isFetchingRef.current) return;
 
-      const target = e.currentTarget
-      const bottom = target.scrollHeight - target.scrollTop <= target.clientHeight + 50
+      const target = e.currentTarget;
+      const bottom = target.scrollHeight - target.scrollTop <= target.clientHeight + 50;
 
       if (bottom) {
-        const nextPage = page + 1
-        setPage(nextPage)
-        fetchData(nextPage, search, true)
+        const nextPage = page + 1;
+        setPage(nextPage);
+        fetchData(nextPage, search, true);
       }
     },
-    [paginated, hasMore, isLoading, url, page, search, fetchData],
-  )
+    [paginated, hasMore, isLoading, url, page, search, fetchData]
+  );
 
   const handleSelect = (item: MultiSelectItem) => {
-    if (disabled || item.disabled) return
+    if (disabled || item.disabled) return;
 
-    let newValue: MultiSelectItem | MultiSelectItem[] | undefined
+    let newValue: MultiSelectItem | MultiSelectItem[] | undefined;
 
     if (multiple) {
-      const current = Array.isArray(selected) ? selected : []
-      const exists  = current.some((v) => v.value === item.value)
-      newValue      = exists ? current.filter((v) => v.value !== item.value) : [...current, item]
+      const current = Array.isArray(selected) ? selected : [];
+      const exists  = current.some((v) => v.value === item.value);
+      newValue      = exists ? current.filter((v) => v.value !== item.value) : [...current, item];
     } else {
-      newValue = item
-      setOpen(false)
+      newValue = item;
+      setOpen(false);
     }
 
-    setSelected(newValue)
-    onChange?.(newValue)
-  }
+    setSelected(newValue);
+    onChange?.(newValue);
+  };
 
   const isSelected = useCallback(
     (item: MultiSelectItem) => {
       if (multiple && Array.isArray(selected)) {
-        return selected.some((v) => v.value === item.value)
+        return selected.some((v) => v.value === item.value);
       }
-      return (selected as MultiSelectItem)?.value === item.value
+      return (selected as MultiSelectItem)?.value === item.value;
     },
-    [selected, multiple],
-  )
+    [selected, multiple]
+  );
 
   const displayValue = useMemo(() => {
-    if (multiple && Array.isArray(selected)) return selected.map((i) => i.label).join(", ")
-    if (!multiple && (selected as MultiSelectItem)?.label) return (selected as MultiSelectItem).label
-    return ""
-  }, [selected, multiple])
+    if (multiple && Array.isArray(selected)) return selected.map((i) => i.label).join(", ");
+    if (!multiple && (selected as MultiSelectItem)?.label)
+      return (selected as MultiSelectItem).label;
+    return "";
+  }, [selected, multiple]);
 
   const sizeClasses = {
     sm: "min-h-[2rem] text-xs px-2 py-1",
     md: "min-h-[2.5rem] text-sm px-3 py-2",
     lg: "min-h-[3rem] text-base px-4 py-2.5",
-  }[size]
+  }[size];
 
   const variantClasses = {
     outline: "border border-gray-300 bg-white text-gray-700",
     solid: "bg-blue-600 text-white border border-blue-600",
     soft: "bg-blue-50 border border-blue-100 text-blue-700",
-  }[variant]
+  }[variant];
 
-  const dropdownPositionClasses = dropdownPosition === "top" ? "bottom-full mb-2" : "top-full mt-2"
+  const dropdownPositionClasses = dropdownPosition === "top" ? "bottom-full mb-2" : "top-full mt-2";
 
   return (
     <div ref={containerRef} className={`relative ${className}`}>
@@ -330,7 +336,9 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         }`}
         onClick={() => !disabled && setOpen(!open)}
       >
-        <span className={displayValue ? "text-gray-700" : "text-gray-400"}>{displayValue || placeholder}</span>
+        <span className={displayValue ? "text-gray-700" : "text-gray-400"}>
+          {displayValue || placeholder}
+        </span>
         <Icon
           icon="mdi:chevron-down"
           className={`w-4 h-4 ml-2 transition-transform text-gray-500 ${open ? "rotate-180" : ""}`}
@@ -345,7 +353,10 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           {/* Search */}
           <div className="p-2 border-b border-gray-200 bg-gray-50">
             <div className="relative">
-              <Icon icon="mdi:magnify" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Icon
+                icon="mdi:magnify"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+              />
               {searchInput && (
                 <input
                   type="text"
@@ -368,7 +379,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
             ) : filteredItems.length > 0 ? (
               <>
                 {filteredItems.map((item) => {
-                  const selected = isSelected(item)
+                  const selected = isSelected(item);
                   return (
                     <div
                       key={item.value}
@@ -381,9 +392,14 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                         {item.icon && <Icon icon={item.icon} className="w-4 h-4 text-gray-500" />}
                         <span className="text-sm text-gray-700">{item.label}</span>
                       </div>
-                      {selected && <Icon icon="mdi:check" className="w-5 h-5 text-blue-600 flex-shrink-0 ml-2" />}
+                      {selected && (
+                        <Icon
+                          icon="mdi:check"
+                          className="w-5 h-5 text-blue-600 flex-shrink-0 ml-2"
+                        />
+                      )}
                     </div>
-                  )
+                  );
                 })}
                 {isLoading && page > 1 && (
                   <div className="flex items-center justify-center py-3 text-gray-500 text-sm">
@@ -399,5 +415,5 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};

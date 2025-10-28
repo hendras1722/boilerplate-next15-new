@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import dynamic from "next/dynamic";
 import LoadingPage from "./LoadingPage";
@@ -9,5 +9,5 @@ const View = dynamic(() => import("./FetchPage"), {
 });
 
 export default function ViewPage() {
-  return  <View />;
+  return <View />;
 }

@@ -75,9 +75,7 @@ async function removeInstance(component: ComponentType<any>) {
  * Mengambil instance global (singleton) dari sebuah komponen React.
  * Semua operasi dijalankan berurutan untuk mencegah race condition.
  */
-export async function useSingleton<T = any>(
-  component: ComponentType<any>,
-): Promise<T> {
+export async function useSingleton<T = any>(component: ComponentType<any>): Promise<T> {
   const result = await queue.add(() => createInstance(component));
   return result as T;
 }
@@ -85,8 +83,6 @@ export async function useSingleton<T = any>(
 /**
  * Menghapus instance global dari daftar singleton.
  */
-export async function removeSingleton(
-  component: ComponentType<any>,
-): Promise<void> {
+export async function removeSingleton(component: ComponentType<any>): Promise<void> {
   await queue.add(() => removeInstance(component));
 }

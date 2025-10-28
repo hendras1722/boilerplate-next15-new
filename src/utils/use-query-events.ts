@@ -7,7 +7,7 @@ interface Callbacks<TData, TError> {
 
 export const useQueryEvents = <TData = unknown, TError = unknown>(
   query: UseQueryResult<TData, TError>,
-  callbacks: Callbacks<TData, TError>,
+  callbacks: Callbacks<TData, TError>
 ) => {
   const { isSuccess, isError, data, error } = query;
   const { onSuccess, onError }              = callbacks;

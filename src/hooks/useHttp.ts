@@ -3,11 +3,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useState, useCallback, useMemo } from "react";
 import { toast } from "sonner";
-import {
-  fetchRequest,
-  getErrorMessage,
-  type RequestOptions,
-} from "../lib/ofetch";
+import { fetchRequest, getErrorMessage, type RequestOptions } from "../lib/ofetch";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
@@ -38,7 +34,7 @@ export interface UseHttpReturn<TResponse, TBody = unknown> {
 
 export function useHttp<TResponse, TBody = unknown>(
   url: string,
-  options?: UseHttpOptions<TResponse, TBody>,
+  options?: UseHttpOptions<TResponse, TBody>
 ): UseHttpReturn<TResponse, TBody> {
   const queryClient = useQueryClient();
 
@@ -82,10 +78,7 @@ export function useHttp<TResponse, TBody = unknown>(
           reqOptions.body = payload as Record<string, unknown>;
         }
 
-        const { data: responseData } = await fetchRequest<TResponse>(
-          url,
-          reqOptions,
-        );
+        const { data: responseData } = await fetchRequest<TResponse>(url, reqOptions);
 
         setData(responseData);
 
@@ -112,8 +105,7 @@ export function useHttp<TResponse, TBody = unknown>(
         setLoading(false);
         return responseData;
       } catch (err) {
-        const errorObj =
-          err instanceof Error ? err : new Error("Unknown error");
+        const errorObj = err instanceof Error ? err : new Error("Unknown error");
         setError(errorObj);
 
         if (showErrorToast) {
@@ -146,7 +138,7 @@ export function useHttp<TResponse, TBody = unknown>(
       requestOptions,
       onSuccess,
       onError,
-    ],
+    ]
   );
 
   const reset = useCallback(() => {

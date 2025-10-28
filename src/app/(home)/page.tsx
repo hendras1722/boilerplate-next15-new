@@ -1,32 +1,24 @@
-'use client'
+"use client";
 
-import React from 'react';
-import { ColumnDef } from '@tanstack/react-table';
-import ShadcnDataTable from '@/components/Datatable';
-import Modal from '@/components/modal';
-import { Button } from '@/components/ui/button';
-import { GetmeResponse, useGetme } from '@/actions/getme/get';
-
-type User = {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-};
+import type { ColumnDef } from "@tanstack/react-table";
+import { type GetmeResponse, useGetme } from "@/actions/getme/get";
+import ShadcnDataTable from "@/components/Datatable";
+import Modal from "@/components/modal";
+import { Button } from "@/components/ui/button";
 
 const columns: ColumnDef<GetmeResponse>[] = [
   {
-    header: 'User Info',
-    accessorKey: '_id'
+    header: "User Info",
+    accessorKey: "_id",
   },
   {
-    accessorKey: 'email',
-    header: 'Role',
+    accessorKey: "email",
+    header: "Role",
   },
   {
-    id: 'actions',
-    header: 'Actions',
-    cell: ({ row }) => (
+    id: "actions",
+    header: "Actions",
+    cell: () => (
       <div className="flex gap-2">
         <Button className="text-sm underline">Edit</Button>
         <Button className="text-sm text-red-600 underline">Delete</Button>
@@ -35,12 +27,15 @@ const columns: ColumnDef<GetmeResponse>[] = [
   },
 ];
 
-
 export default function Page() {
-    const getme = useGetme();
+  const getme = useGetme();
   return (
     <div className="p-4 w-full">
-      <ShadcnDataTable columns={columns} data={getme.data?.data ? [getme.data?.data] : []} pageSizeOptions={[10,20,30]}  />
+      <ShadcnDataTable
+        columns={columns}
+        data={getme.data?.data ? [getme.data?.data] : []}
+        pageSizeOptions={[10, 20, 30]}
+      />
 
       <Modal />
     </div>

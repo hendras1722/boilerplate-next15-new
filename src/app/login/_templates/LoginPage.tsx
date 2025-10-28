@@ -20,11 +20,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-900 to-slate-700">
+    <div className="min-h-screen flex items-center w-full justify-center bg-linear-to-br from-slate-900 to-slate-700">
       <div className="w-full max-w-md p-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-lg">
-        <h1 className="text-2xl font-semibold text-center text-white mb-6">
-          Login ke Akunmu
-        </h1>
+        <h1 className="text-2xl font-semibold text-center text-white mb-6">Login ke Akunmu</h1>
 
         <Form
           schema={schema}
@@ -46,14 +44,8 @@ export default function LoginPage() {
                 />
               </FormField>
 
-              <FormField name="password" label="Password" required  className="text-white">
-                <Input
-                  type="password"
-                  name="password"
-                  id="password"
-                  required
-                  placeholder="****"
-                />
+              <FormField name="password" label="Password" required className="text-white">
+                <Input type="password" name="password" id="password" required placeholder="****" />
               </FormField>
               <button
                 onClick={submit}

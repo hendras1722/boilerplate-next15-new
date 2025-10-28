@@ -74,10 +74,7 @@ function getTokenFromCookie(): string | undefined {
   return Cookies.get(TOKEN_COOKIE_NAME);
 }
 
-function setTokenCookie(
-  token: string,
-  maxAge: number = DEFAULT_TOKEN_MAX_AGE,
-): void {
+function setTokenCookie(token: string, maxAge: number = DEFAULT_TOKEN_MAX_AGE): void {
   if (typeof document === "undefined") return;
 
   Cookies.set(TOKEN_COOKIE_NAME, token, {
@@ -106,7 +103,7 @@ function removeTokenCookie(): void {
  */
 export async function fetchRequest<T = unknown>(
   path: string,
-  options: RequestOptions = {},
+  options: RequestOptions = {}
 ): Promise<UseRequestResult<T>> {
   const cleanPath = path.startsWith("/") ? path.slice(1) : path;
   const fullPath  = `${API_URL}/${cleanPath}`;
@@ -159,8 +156,7 @@ function parseErrorFields(err: ErrorResponse): FieldError[] {
 
   const errors        = Array.isArray(responseData) ? responseData : [responseData];
   const isValidErrors = errors.every(
-    (item): item is FieldErrorSchema =>
-      fieldErrorSchema.safeParse(item).success,
+    (item): item is FieldErrorSchema => fieldErrorSchema.safeParse(item).success
   );
 
   if (!isValidErrors) return [];
@@ -180,7 +176,7 @@ function parseErrorFields(err: ErrorResponse): FieldError[] {
  */
 export function parseRequestError(
   err: unknown,
-  formRef?: { value: FormInstance | null },
+  formRef?: { value: FormInstance | null }
 ): FieldError[] {
   const errorResponse = err as ErrorResponse;
   const fieldErrors   = parseErrorFields(errorResponse);
@@ -216,9 +212,7 @@ export function getErrorMessage(err: unknown): string {
 
   // Handle generic errors
   const errorMessage = errorResponse.message;
-  return typeof errorMessage === "string"
-    ? errorMessage
-    : "Something went wrong";
+  return typeof errorMessage === "string" ? errorMessage : "Something went wrong";
 }
 
 // ============================================================================

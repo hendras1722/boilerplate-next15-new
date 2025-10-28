@@ -24,9 +24,9 @@ async function refreshData() {
 
 // 🌐 Halaman utama (Server Component)
 export default async function UsersPage({ params }: Readonly<{ params: { id: string } }>) {
-  const users = await getUsers();
-  const {id}  = await params
-  console.log(id,'iniparams')
+  const users  = await getUsers();
+  const { id } = await params;
+  console.log(id, "iniparams");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-700 text-white px-6 py-12">
@@ -61,9 +61,7 @@ export default async function UsersPage({ params }: Readonly<{ params: { id: str
               </div>
             ))
           ) : (
-            <p className="text-center text-slate-400 py-8">
-              Tidak ada data pengguna.
-            </p>
+            <p className="text-center text-slate-400 py-8">Tidak ada data pengguna.</p>
           )}
         </div>
       </div>

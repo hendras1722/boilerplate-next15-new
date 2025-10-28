@@ -1,11 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  ReactNode,
-  ReactElement,
-} from "react";
+import React, { createContext, useContext, ReactNode, ReactElement } from "react";
 import {
   useForm,
   FormProvider,
@@ -24,9 +19,7 @@ import { ZodSchema } from "zod";
 // Types
 // ---------------------------
 interface FormProps<T extends FieldValues> {
-  children:
-    | ReactNode
-    | ((methods: UseFormReturn<T> & { submit: () => void }) => ReactNode);
+  children: ReactNode | ((methods: UseFormReturn<T> & { submit: () => void }) => ReactNode);
   onSubmit: SubmitHandler<T>;
   schema?: ZodSchema<T>;
   defaultValues?: DefaultValues<T>;
@@ -103,9 +96,7 @@ export const FormField = ({
   };
 
   if (!children) {
-    throw new Error(
-      "FormField requires children. Use <FormField name='...'><input /></FormField>"
-    );
+    throw new Error("FormField requires children. Use <FormField name='...'><input /></FormField>");
   }
 
   return (
@@ -140,9 +131,7 @@ export const FormField = ({
 // ---------------------------
 // useFormContext
 // ---------------------------
-export const useFormContext = <
-  T extends FieldValues = FieldValues,
->(): UseFormReturn<T> => {
+export const useFormContext = <T extends FieldValues = FieldValues>(): UseFormReturn<T> => {
   const context = useContext(FormContext);
   if (!context) {
     throw new Error("useFormContext must be used within a Form component");
@@ -155,11 +144,10 @@ export const useFormContext = <
 // ---------------------------
 export const useFormField = (name: string) => {
   const methods                                                         = useRHFContext(); // pakai FormProvider react-hook-form
-  const { fields, append, remove, insert, update, prepend, swap, move } =
-    useFieldArray({
-      control: methods.control,
-      name,
-    });
+  const { fields, append, remove, insert, update, prepend, swap, move } = useFieldArray({
+    control: methods.control,
+    name,
+  });
 
   return {
     fields,
