@@ -1,7 +1,7 @@
 "use client";
 
 import { Calendar, type DateRange } from "@/components/ui/DatePickerRange";
-import { CalendarDate } from "@internationalized/date";
+import { CalendarDate, DateValue } from "@internationalized/date";
 import { definePage } from "@/lib/definePage";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
@@ -15,10 +15,6 @@ definePage({
 });
 
 export default function TestLoggerPage() {
-  const [rangeDate, setRangeDate]     = useState<DateRange | null>({
-    start: new CalendarDate(2025, 10, 21),
-    end: new CalendarDate(2025, 10, 21),
-  });
   const [singleValue, setSingleValue] = useState<MultiSelectItem | MultiSelectItem[] | undefined>();
   const [postValue, setPostValue]     = useState<MultiSelectItem | MultiSelectItem[] | undefined>({
     value: 91,
@@ -159,17 +155,6 @@ export default function TestLoggerPage() {
           </div>
         </div>
       </div>
-      <Card className="p-5 w-[540px]">
-        <Calendar
-          range
-          value={rangeDate}
-          onChange={(newRange) => setRangeDate(newRange as DateRange | null)}
-          numberOfMonths={1}
-          fixedWeeks={true}
-          minValue={new CalendarDate(2025, 10, 21)}
-          size="sm"
-        />
-      </Card>
     </div>
   );
 }

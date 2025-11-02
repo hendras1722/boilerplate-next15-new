@@ -15,15 +15,23 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodSchema } from "zod";
 
-// ---------------------------
-// Types
-// ---------------------------
 interface FormProps<T extends FieldValues> {
-  children: ReactNode | ((methods: UseFormReturn<T> & { submit: () => void }) => ReactNode);
+  children:
+    | ReactNode
+    | ((
+        methods: UseFormReturn<T> & {
+          submit: () => void;
+          isPending: boolean;
+          useFieldArray: <K extends keyof T & string>(
+            name: K
+          ) => ReturnType<typeof useFieldArray<T>>;
+        }
+      ) => ReactNode);
   onSubmit: SubmitHandler<T>;
   schema?: ZodSchema<T>;
   defaultValues?: DefaultValues<T>;
   className?: string;
+  config?: Omit<Parameters<typeof useForm>[0], "defaultValues" | "resolver">;
 }
 
 interface FormFieldProps {
@@ -35,45 +43,45 @@ interface FormFieldProps {
   rules?: object;
 }
 
-// ---------------------------
-// Context
-// ---------------------------
 const FormContext = createContext<UseFormReturn<any> | null>(null);
 
-// ---------------------------
-// Form Component
-// ---------------------------
 export const Form = <T extends FieldValues>({
   children,
   onSubmit,
   schema,
   defaultValues,
   className = "",
+  config = {},
 }: FormProps<T>) => {
   const methods = useForm<T>({
     resolver: schema ? (zodResolver(schema as any) as any) : undefined,
     defaultValues,
     mode: "onChange",
+    ...config,
   });
 
-  const submit = () => {
-    methods.handleSubmit(onSubmit)();
+  const submit = async () => {
+    await methods.handleSubmit(onSubmit)();
   };
 
   return (
     <FormProvider {...methods}>
       <FormContext.Provider value={methods}>
-        <div className={className}>
-          {typeof children === "function" ? children({ ...methods, submit }) : children}
-        </div>
+        <form className={className} onSubmit={methods.handleSubmit(onSubmit)}>
+          {typeof children === "function"
+            ? children({
+                ...methods,
+                submit,
+                isPending: methods.formState.isSubmitting,
+                useFieldArray: (name: string) => useFieldArray({ control: methods.control, name }),
+              })
+            : children}
+        </form>
       </FormContext.Provider>
     </FormProvider>
   );
 };
 
-// ---------------------------
-// FormField Component
-// ---------------------------
 export const FormField = ({
   name,
   label,
@@ -128,9 +136,6 @@ export const FormField = ({
   );
 };
 
-// ---------------------------
-// useFormContext
-// ---------------------------
 export const useFormContext = <T extends FieldValues = FieldValues>(): UseFormReturn<T> => {
   const context = useContext(FormContext);
   if (!context) {
@@ -139,11 +144,8 @@ export const useFormContext = <T extends FieldValues = FieldValues>(): UseFormRe
   return context as UseFormReturn<T>;
 };
 
-// ---------------------------
-// useFormField (Dynamic Array)
-// ---------------------------
 export const useFormField = (name: string) => {
-  const methods                                                         = useRHFContext(); // pakai FormProvider react-hook-form
+  const methods                                                         = useRHFContext();
   const { fields, append, remove, insert, update, prepend, swap, move } = useFieldArray({
     control: methods.control,
     name,
