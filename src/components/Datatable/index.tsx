@@ -1,13 +1,13 @@
-'use client'
+"use client";
 
-import React from 'react'
+import React from "react";
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
-} from '@tanstack/react-table'
+} from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -15,36 +15,36 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { PaginationNuxt } from '../Pagination'
+} from "@/components/ui/select";
+import { PaginationNuxt } from "../Pagination";
 
 type PaginationState = {
-  pageIndex: number
-  pageSize: number
-}
+  pageIndex: number;
+  pageSize: number;
+};
 
 type DataTableProps<TData> = {
-  columns: ColumnDef<TData, any>[]
-  data: TData[]
+  columns: ColumnDef<TData, any>[];
+  data: TData[];
 
   // 🔹 Optional controlled pagination from parent
-  paginate?: PaginationState
-  setPaginate?: React.Dispatch<React.SetStateAction<PaginationState>>
+  paginate?: PaginationState;
+  setPaginate?: React.Dispatch<React.SetStateAction<PaginationState>>;
 
   // 🔹 Optional page size options
-  pageSizeOptions?: number[]
+  pageSizeOptions?: number[];
 
   // 🔹 Pagination display options
-  showEdges?: boolean
-  showEllipsis?: boolean
-}
+  showEdges?: boolean;
+  showEllipsis?: boolean;
+};
 
 export default function ShadcnDataTable<TData>({
   columns,
@@ -59,11 +59,11 @@ export default function ShadcnDataTable<TData>({
   const [internalPaginate, setInternalPaginate] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: pageSizeOptions[0],
-  })
+  });
 
   // 🧠 Use external paginate if provided, else fallback to internal
-  const pagination    = paginate ?? internalPaginate
-  const setPagination = setPaginate ?? setInternalPaginate
+  const pagination    = paginate ?? internalPaginate;
+  const setPagination = setPaginate ?? setInternalPaginate;
 
   const table = useReactTable({
     data,
@@ -73,10 +73,10 @@ export default function ShadcnDataTable<TData>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination: false, // can be made true for server pagination
-  })
+  });
 
-  const currentPage = pagination.pageIndex + 1
-  const totalPages  = table.getPageCount()
+  const currentPage = pagination.pageIndex + 1;
+  const totalPages  = table.getPageCount();
 
   return (
     <div className="w-full space-y-4">
@@ -84,9 +84,9 @@ export default function ShadcnDataTable<TData>({
       <div className="rounded-lg border bg-card">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
+                {headerGroup.headers.map((header) => (
                   <TableHead key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder
                       ? null
@@ -99,9 +99,9 @@ export default function ShadcnDataTable<TData>({
 
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map(row => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map(cell => (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                  {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
@@ -130,14 +130,14 @@ export default function ShadcnDataTable<TData>({
           <Select
             value={String(pagination.pageSize)}
             onValueChange={(value) =>
-              setPagination(prev => ({ ...prev, pageSize: Number(value), pageIndex: 0 }))
+              setPagination((prev) => ({ ...prev, pageSize: Number(value), pageIndex: 0 }))
             }
           >
             <SelectTrigger className="ShadcnDataTable">
               <SelectValue placeholder={String(pagination.pageSize)} />
             </SelectTrigger>
             <SelectContent>
-              {pageSizeOptions.map(size => (
+              {pageSizeOptions.map((size) => (
                 <SelectItem key={size} value={String(size)}>
                   {size}
                 </SelectItem>
@@ -151,7 +151,7 @@ export default function ShadcnDataTable<TData>({
           <PaginationNuxt
             page={currentPage}
             total={totalPages}
-            onChange={(p) => setPagination(prev => ({ ...prev, pageIndex: p - 1 }))}
+            onChange={(p) => setPagination((prev) => ({ ...prev, pageIndex: p - 1 }))}
             siblingCount={1}
             showEdges={showEdges}
             showEllipsis={showEllipsis}
@@ -162,5 +162,5 @@ export default function ShadcnDataTable<TData>({
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -11,7 +11,7 @@ const API_BASE_URL = "/";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> },
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
   const { path }     = await params;
   const pathString   = path.join("/");
@@ -37,46 +37,40 @@ export async function GET(
     });
 
     if (!response.ok) {
-      return NextResponse.json(
-        { error: "Failed to fetch data" },
-        { status: response.status },
-      );
+      return NextResponse.json({ error: "Failed to fetch data" }, { status: response.status });
     }
 
     const data = await response.json();
     return NextResponse.json(data);
   } catch (_error) {
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> },
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
   return handleRequest(request, params, "POST");
 }
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> },
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
   return handleRequest(request, params, "PUT");
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> },
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
   return handleRequest(request, params, "DELETE");
 }
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> },
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
   return handleRequest(request, params, "PATCH");
 }
@@ -84,7 +78,7 @@ export async function PATCH(
 async function handleRequest(
   request: NextRequest,
   params: Promise<{ path: string[] }>,
-  method: string,
+  method: string
 ) {
   const { path }     = await params;
   const pathString   = path.join("/");
@@ -130,9 +124,6 @@ async function handleRequest(
     return responseData;
   } catch (error) {
     console.error("Proxy error:", error);
-    return NextResponse.json(
-      { error: "Proxy request failed" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Proxy request failed" }, { status: 500 });
   }
 }

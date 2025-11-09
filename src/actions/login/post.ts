@@ -20,15 +20,12 @@ interface BaseResponseLogin<T> {
 }
 
 export function useLogin() {
-  return useHttp<BaseResponseLogin<LoginResponse>, LoginRequest>(
-    "/auth/login",
-    {
-      method: "POST",
-      onSuccess: (data) => {
-        setAuthToken(data.data.token);
-        // window.location.href = "/admin/dashboard";
-      },
-      key: ["login"],
+  return useHttp<BaseResponseLogin<LoginResponse>, LoginRequest>("/auth/login", {
+    method: "POST",
+    onSuccess: (data) => {
+      setAuthToken(data.data.token);
+      window.location.href = "/admin/dashboard";
     },
-  );
+    key: ["login"],
+  });
 }

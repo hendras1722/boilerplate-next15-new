@@ -49,23 +49,14 @@ export function addLog(
   }
 }
 
-export const logError = (
-  message: string,
-  context?: string,
-  extra?: Partial<LogItem>
-) => addLog("error", message, context, extra);
+export const logError = (message: string, context?: string, extra?: Partial<LogItem>) =>
+  addLog("error", message, context, extra);
 
-export const logWarn = (
-  message: string,
-  context?: string,
-  extra?: Partial<LogItem>
-) => addLog("warn", message, context, extra);
+export const logWarn = (message: string, context?: string, extra?: Partial<LogItem>) =>
+  addLog("warn", message, context, extra);
 
-export const logInfo = (
-  message: string,
-  context?: string,
-  extra?: Partial<LogItem>
-) => addLog("info", message, context, extra);
+export const logInfo = (message: string, context?: string, extra?: Partial<LogItem>) =>
+  addLog("info", message, context, extra);
 
 export function getLogs(): LogItem[] {
   ensureLogFile();

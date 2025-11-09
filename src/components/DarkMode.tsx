@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { useTheme } from "next-themes"
+import * as React from "react";
+import { useTheme } from "next-themes";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Icon } from "@iconify/react"
-import { Each, ConditionalGroup, If, Else, ElseIf } from 'use-react-utilities'
+} from "@/components/ui/dropdown-menu";
+import { Icon } from "@iconify/react";
+import { Each, ConditionalGroup, If, Else, ElseIf } from "use-react-utilities";
 
 export function DarkModeToggle() {
-  const { setTheme, theme,themes } = useTheme()
+  const { setTheme, theme, themes } = useTheme();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -33,12 +33,15 @@ export function DarkModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <Each of={themes} render={(theme, index) => (
-          <DropdownMenuItem key={index} onClick={() => setTheme(theme)}>
-            {theme}
-          </DropdownMenuItem>
-        )}/>
+        <Each
+          of={themes}
+          render={(theme, index) => (
+            <DropdownMenuItem key={index} onClick={() => setTheme(theme)}>
+              {theme}
+            </DropdownMenuItem>
+          )}
+        />
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

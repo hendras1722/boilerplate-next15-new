@@ -21,7 +21,7 @@ interface ErrorResponse {
 async function handleRequest(
   request: NextRequest,
   params: Promise<{ path: string[] }>,
-  method: string,
+  method: string
 ): Promise<NextResponse> {
   try {
     const { path }     = await params;
@@ -105,49 +105,49 @@ async function handleRequest(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> },
+  { params }: { params: Promise<{ path: string[] }> }
 ): Promise<NextResponse> {
   return handleRequest(request, params, "GET");
 }
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> },
+  { params }: { params: Promise<{ path: string[] }> }
 ): Promise<NextResponse> {
   return handleRequest(request, params, "POST");
 }
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> },
+  { params }: { params: Promise<{ path: string[] }> }
 ): Promise<NextResponse> {
   return handleRequest(request, params, "PUT");
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> },
+  { params }: { params: Promise<{ path: string[] }> }
 ): Promise<NextResponse> {
   return handleRequest(request, params, "DELETE");
 }
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> },
+  { params }: { params: Promise<{ path: string[] }> }
 ): Promise<NextResponse> {
   return handleRequest(request, params, "PATCH");
 }
 
 export async function HEAD(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> },
+  { params }: { params: Promise<{ path: string[] }> }
 ): Promise<NextResponse> {
   return handleRequest(request, params, "HEAD");
 }
 
 export async function OPTIONS(
   request: NextRequest,
-  { params }: { params: Promise<{ path: string[] }> },
+  { params }: { params: Promise<{ path: string[] }> }
 ): Promise<NextResponse> {
   return handleRequest(request, params, "OPTIONS");
 }

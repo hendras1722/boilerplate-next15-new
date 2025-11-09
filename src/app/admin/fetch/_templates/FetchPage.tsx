@@ -11,7 +11,7 @@ const schema = z.object({
   addresses: z.array(z.object({ value: z.string().min(1, "Alamat wajib diisi") })),
 });
 
-type TypeSubmit = z.Infer<typeof schema>
+type TypeSubmit = z.Infer<typeof schema>;
 
 export default function LoginPage() {
   const onSubmit = (data: TypeSubmit) => {

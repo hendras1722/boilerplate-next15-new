@@ -5,11 +5,5 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-
-
-  return (
-    <div className="flex h-screen overflow-hidden">
-      {children}
-    </div>
-  );
+  return <div className="flex h-screen overflow-hidden">{children}</div>;
 }
