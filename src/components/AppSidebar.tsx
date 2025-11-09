@@ -97,7 +97,7 @@ function NestedPopover({ item, currentPath }: { item: MenuItem; currentPath: str
           <Button
             aria-label={item.label}
             variant="ghost"
-            className="w-full justify-between px-3 py-2 text-sm font-normal hover:!bg-primary/50"
+            className="w-full justify-between px-3 py-2 text-sm font-normal hover:bg-primary/50"
           >
             {item.label}
             <Icon icon="lucide:chevron-right" className="h-4 w-4" />

@@ -42,7 +42,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {!sidebarCollapsed && (
         <Button
           variant={"ghost"}
-          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+          className="fixed inset-0 h-screen rounded-none bg-black/40 z-40 lg:hidden"
           onClick={handleToggleSidebar}
         />
       )}

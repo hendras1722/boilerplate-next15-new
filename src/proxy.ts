@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse, userAgent } from "next/server";
 import { ofetch } from "ofetch";
 
 const PUBLIC_ROUTES  = ["/"];
@@ -9,7 +9,10 @@ export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token        = request.cookies.get("token")?.value || null;
   const baseURL      = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+  const { device }   = userAgent(request);
 
+  const viewport = device.type || "desktop";
+  console.log(viewport, "iniprot");
   if (request.headers.get("x-internal-middleware") === "true") {
     return NextResponse.next();
   }

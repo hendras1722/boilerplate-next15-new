@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { MultiSelect, type MultiSelectItem } from "@/components/ui/MultiSelect";
 import { Marquee } from "@/components/Marquee";
 import { useData } from "@/hooks/useData";
+import { useSelectedLayoutSegments } from "next/navigation";
 
 definePage({
   meta: {
@@ -22,6 +23,8 @@ export default function TestLoggerPage() {
     value: 91,
     label: "aut amet sed",
   });
+  const segments                      = useSelectedLayoutSegments();
+  console.log(segments);
 
   const data = useData();
   console.log(data, "byserver");

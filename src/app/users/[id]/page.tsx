@@ -9,9 +9,7 @@ type User = {
 // 🚀 Server function ambil data
 async function getUsers(): Promise<User[]> {
   // Contoh API gratis placeholder
-  const res = await fetch("https://jsonplaceholder.typicode.com/users", {
-    cache: "no-store", // biar tiap render ambil data terbaru
-  });
+  const res = await fetch("https://jsonplaceholder.typicode.com/users");
   return res.json();
 }
 

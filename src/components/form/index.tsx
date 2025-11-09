@@ -11,6 +11,8 @@ import {
   SubmitHandler,
   DefaultValues,
   useFieldArray,
+  ArrayPath,
+  UseFieldArrayReturn,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodSchema } from "zod";
@@ -22,9 +24,7 @@ interface FormProps<T extends FieldValues> {
         methods: UseFormReturn<T> & {
           submit: () => void;
           isPending: boolean;
-          useFieldArray: <K extends keyof T & string>(
-            name: K
-          ) => ReturnType<typeof useFieldArray<T>>;
+          useFieldArray: <K extends ArrayPath<T>>(name: K) => UseFieldArrayReturn<T, K>;
         }
       ) => ReactNode);
   onSubmit: SubmitHandler<T>;
@@ -73,7 +73,8 @@ export const Form = <T extends FieldValues>({
                 ...methods,
                 submit,
                 isPending: methods.formState.isSubmitting,
-                useFieldArray: (name: string) => useFieldArray({ control: methods.control, name }),
+                useFieldArray: <K extends ArrayPath<T>>(name: K) =>
+                  useFieldArray({ control: methods.control, name }),
               })
             : children}
         </form>
