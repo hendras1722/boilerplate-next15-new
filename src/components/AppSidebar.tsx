@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { toArray } from "@/utils/helpers";
 import { Icon, type IconifyIcon } from "@iconify/react";
+import { toArray } from "@/utils/toArray";
 
 export interface MenuItem {
   id: string;

@@ -50,7 +50,6 @@ interface FormInstance {
   setErrors: (errors: FieldError[]) => void;
 }
 
-// Constants
 const TOKEN_COOKIE_NAME     = "token";
 const API_URL               = "/api";
 const DEFAULT_TIMEOUT       = 30000;

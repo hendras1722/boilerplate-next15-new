@@ -17,10 +17,9 @@ export interface UseHttpOptions<TResponse, TBody = unknown> {
   successMessage?: string;
   errorMessage?: string;
   invalidateQueries?: readonly unknown[];
-  /** Custom key untuk identifikasi unik request */
   key?: string | readonly unknown[];
-  /** Additional request options */
   requestOptions?: Omit<RequestOptions, "method" | "body">;
+  initialData?: TResponse | null;
 }
 
 export interface UseHttpReturn<TResponse, TBody = unknown> {
@@ -38,14 +37,10 @@ export function useHttp<TResponse, TBody = unknown>(
 ): UseHttpReturn<TResponse, TBody> {
   const queryClient = useQueryClient();
 
-  // ✅ fix: memoize options agar stabil meski parent kirim object literal baru tiap render
   const stableOptions = useMemo(() => options ?? {}, [JSON.stringify(options)]);
 
-  const [data, setData]       = useState<TResponse | null>(null);
-  const [error, setError]     = useState<Error | null>(null);
-  const [loading, setLoading] = useState(false);
-
   const {
+    initialData = null,
     method = "POST",
     body: defaultBody,
     showSuccessToast = true,
@@ -60,6 +55,14 @@ export function useHttp<TResponse, TBody = unknown>(
   } = stableOptions;
 
   const normalizedKey = Array.isArray(key) ? key : key ? [key] : undefined;
+
+  const [data, setData]       = useState<TResponse | null>(initialData);
+  const [error, setError]     = useState<Error | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  if (initialData && normalizedKey) {
+    queryClient.setQueryData(normalizedKey, initialData);
+  }
 
   const execute = useCallback(
     async (executeBody?: TBody): Promise<TResponse> => {
@@ -142,10 +145,10 @@ export function useHttp<TResponse, TBody = unknown>(
   );
 
   const reset = useCallback(() => {
-    setData(null);
+    setData(initialData ?? null);
     setError(null);
     setLoading(false);
-  }, []);
+  }, [initialData]);
 
   return {
     execute,
