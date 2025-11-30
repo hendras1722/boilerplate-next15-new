@@ -3,8 +3,10 @@
 import { useLogin } from "@/actions/login/post";
 import z from "zod";
 import { Input } from "@/components/ui/input";
-import { Form, FormField } from "@/components/form";
 import { Button } from "@/components/ui/button";
+import { Form, FormField } from "react-hook-form-easy-access";
+import { useRef } from "react";
+import type { FormRef } from "react-hook-form-easy-access/lib/esm/Form";
 
 const schema = z.object({
   email: z.string().email(),
@@ -24,6 +26,8 @@ type LoginFormData = z.infer<typeof schema>;
 export default function LoginPage() {
   const loginAction = useLogin();
 
+  const formRef = useRef<FormRef<LoginFormData>>(null);
+
   const onSubmit = async (data: LoginFormData) => {
     await loginAction.execute(data);
   };
@@ -34,6 +38,7 @@ export default function LoginPage() {
         <h1 className="text-2xl font-semibold text-center text-white mb-6">Login ke Akunmu</h1>
 
         <Form
+          ref={formRef}
           schema={schema}
           onSubmit={onSubmit}
           defaultValues={{

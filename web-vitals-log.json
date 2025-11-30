@@ -1,93 +1,156 @@
 [
   {
+    "name": "INP",
+    "value": 8,
+    "rating": "good",
+    "navigationType": "reload",
+    "timestamp": 1764144038453
+  },
+  {
+    "name": "FCP",
+    "value": 228,
+    "rating": "good",
+    "navigationType": "reload",
+    "timestamp": 1764144038633
+  },
+  {
     "name": "TTFB",
-    "value": 4366,
+    "value": 88.80000001192093,
+    "rating": "good",
+    "navigationType": "reload",
+    "timestamp": 1764144038688
+  },
+  {
+    "name": "LCP",
+    "value": 228,
+    "rating": "good",
+    "navigationType": "reload",
+    "timestamp": 1764144039820
+  },
+  {
+    "name": "FID",
+    "value": 4,
+    "rating": "good",
+    "navigationType": "reload",
+    "timestamp": 1764144039825
+  },
+  {
+    "name": "CLS",
+    "value": 0.00037985648804976535,
+    "rating": "good",
+    "navigationType": "reload",
+    "timestamp": 1764144052864
+  },
+  {
+    "name": "FCP",
+    "value": 2116,
+    "rating": "needs-improvement",
+    "navigationType": "navigate",
+    "timestamp": 1764144053058
+  },
+  {
+    "name": "TTFB",
+    "value": 1874.4000000357628,
     "rating": "poor",
     "navigationType": "navigate",
-    "timestamp": 1762698584612
+    "timestamp": 1764144053915
   },
   {
-    "name": "INP",
-    "value": 16,
+    "name": "CLS",
+    "value": 0.00006153976742212035,
     "rating": "good",
     "navigationType": "navigate",
-    "timestamp": 1762698589150
+    "timestamp": 1764144056567
   },
   {
-    "name": "FCP",
-    "value": 1580,
+    "name": "CLS",
+    "value": 0.0005211023803460778,
     "rating": "good",
-    "navigationType": "reload",
-    "timestamp": 1762698589911
+    "navigationType": "navigate",
+    "timestamp": 1764144088215
+  },
+  {
+    "name": "INP",
+    "value": 112,
+    "rating": "good",
+    "navigationType": "navigate",
+    "timestamp": 1764146138570
+  },
+  {
+    "name": "CLS",
+    "value": 0.1286115415863315,
+    "rating": "needs-improvement",
+    "navigationType": "navigate",
+    "timestamp": 1764146512306
   },
   {
     "name": "TTFB",
-    "value": 805.5,
+    "value": 2171.399999976158,
+    "rating": "poor",
+    "navigationType": "navigate",
+    "timestamp": 1764340217866
+  },
+  {
+    "name": "FCP",
+    "value": 1380,
+    "rating": "good",
+    "navigationType": "navigate",
+    "timestamp": 1764340223972
+  },
+  {
+    "name": "TTFB",
+    "value": 1250,
     "rating": "needs-improvement",
-    "navigationType": "reload",
-    "timestamp": 1762698589990
+    "navigationType": "navigate",
+    "timestamp": 1764340223999
+  },
+  {
+    "name": "LCP",
+    "value": 1380,
+    "rating": "good",
+    "navigationType": "navigate",
+    "timestamp": 1764340225086
+  },
+  {
+    "name": "FID",
+    "value": 2.899999976158142,
+    "rating": "good",
+    "navigationType": "navigate",
+    "timestamp": 1764340225097
+  },
+  {
+    "name": "CLS",
+    "value": 0.0002761786532794936,
+    "rating": "good",
+    "navigationType": "navigate",
+    "timestamp": 1764340237663
+  },
+  {
+    "name": "FCP",
+    "value": 1720,
+    "rating": "good",
+    "navigationType": "navigate",
+    "timestamp": 1764340237802
+  },
+  {
+    "name": "TTFB",
+    "value": 1533.8999999761581,
+    "rating": "needs-improvement",
+    "navigationType": "navigate",
+    "timestamp": 1764340238397
   },
   {
     "name": "CLS",
     "value": 0.00006153976742212035,
     "rating": "good",
-    "navigationType": "reload",
-    "timestamp": 1762698590168
+    "navigationType": "navigate",
+    "timestamp": 1764340240451
   },
   {
     "name": "INP",
-    "value": 0,
+    "value": 8,
     "rating": "good",
-    "navigationType": "reload",
-    "timestamp": 1762698597856
-  },
-  {
-    "name": "FCP",
-    "value": 1520,
-    "rating": "good",
-    "navigationType": "reload",
-    "timestamp": 1762698598696
-  },
-  {
-    "name": "TTFB",
-    "value": 668.9000000357628,
-    "rating": "good",
-    "navigationType": "reload",
-    "timestamp": 1762698598716
-  },
-  {
-    "name": "CLS",
-    "value": 0.00006153976742212035,
-    "rating": "good",
-    "navigationType": "reload",
-    "timestamp": 1762698598983
-  },
-  {
-    "name": "INP",
-    "value": 48,
-    "rating": "good",
-    "navigationType": "reload",
-    "timestamp": 1762698615652
-  },
-  {
-    "name": "TTFB",
-    "value": 998,
-    "rating": "needs-improvement",
-    "navigationType": "reload",
-    "timestamp": 1762698631405
-  },
-  {
-    "name": "INP",
-    "value": 48,
-    "rating": "good",
-    "navigationType": "reload",
-    "timestamp": 1762698645703
-  },
-  {
-    "name": "INP",
-    "value": 64,
-    "rating": "good",
-    "navigationType": "reload",
-    "timestamp": 1762698668574
+    "navigationType": "navigate",
+    "timestamp": 1764340288417
   }
 ]

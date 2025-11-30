@@ -19,6 +19,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  devIndicators: {
+    position: "bottom-right",
+  },
+  experimental: {
+    browserDebugInfoInTerminal: {
+      depthLimit: 5,
+      edgeLimit: 100,
+    },
+  },
 };
 
 export default nextConfig;
